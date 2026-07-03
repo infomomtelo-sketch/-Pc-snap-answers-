@@ -3,205 +3,1168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>P&C Snap Answers — Photo a Question, Get the Answer</title>
+<title>P&C Practice Tests — Searchable Study Guide</title>
 <style>
   :root{
-    --ink:#1b2733; --paper:#f7f5f0; --card:#fff; --line:#dcd7cc;
-    --correct:#1e7a3c; --correct-bg:#e8f5ec; --accent:#8a6d1f;
-    --muted:#6b7683; --ai:#1d5a8a; --ai-bg:#e8f1f8;
+    --ink:#1b2733;
+    --paper:#f7f5f0;
+    --card:#ffffff;
+    --line:#dcd7cc;
+    --correct:#1e7a3c;
+    --correct-bg:#e8f5ec;
+    --accent:#8a6d1f;
+    --muted:#6b7683;
+    --hl:#ffe89a;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Georgia,serif;background:var(--paper);color:var(--ink);line-height:1.5;padding-bottom:60px}
-  header{background:var(--ink);color:#f2efe8;padding:18px 16px 14px}
-  header h1{font-size:1.1rem;font-weight:normal}
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  header{
+    background:var(--ink);
+    color:#f2efe8;
+    padding:20px 16px 14px;
+  }
+  header h1{
+    font-size:1.15rem;
+    font-weight:normal;
+    letter-spacing:.02em;
+  }
   header h1 b{color:#e9c86a}
-  header p{font-family:-apple-system,Arial,sans-serif;font-size:.7rem;color:#aeb7c2;margin-top:4px;text-transform:uppercase;letter-spacing:.09em}
-  main{max-width:640px;margin:0 auto;padding:16px}
-  .snapbtn{
-    display:block;width:100%;padding:18px;margin:8px 0 4px;
-    font-family:-apple-system,Arial,sans-serif;font-size:1.05rem;font-weight:600;
-    background:var(--ink);color:#f2efe8;border:none;border-radius:12px;cursor:pointer;
+  header p{
+    font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;
+    font-size:.72rem;
+    color:#aeb7c2;
+    margin-top:4px;
+    text-transform:uppercase;
+    letter-spacing:.09em;
   }
-  .snapbtn:active{opacity:.85}
-  .hint{font-family:-apple-system,Arial,sans-serif;font-size:.75rem;color:var(--muted);text-align:center;margin-bottom:14px}
-  #preview{width:100%;border-radius:10px;border:1px solid var(--line);display:none;margin:10px 0}
-  .status{
-    display:none;font-family:-apple-system,Arial,sans-serif;font-size:.9rem;
-    color:var(--muted);text-align:center;padding:16px 0;
+  .searchwrap{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    padding:10px 16px;
   }
-  .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);
-    animation:pulse 1s infinite alternate;margin-right:8px}
-  @keyframes pulse{from{opacity:.3}to{opacity:1}}
-  .result{
-    background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:14px 16px;margin:12px 0;
+  .searchbar{
+    display:flex;
+    gap:8px;
+    max-width:760px;
+    margin:0 auto;
   }
-  .result .tag{
-    font-family:-apple-system,Arial,sans-serif;font-size:.65rem;font-weight:700;
-    text-transform:uppercase;letter-spacing:.07em;padding:3px 8px;border-radius:20px;display:inline-block;margin-bottom:8px;
+  #q{
+    flex:1;
+    font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;
+    font-size:16px;
+    padding:11px 14px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--card);
+    color:var(--ink);
+    outline:none;
   }
-  .tag.bank{background:var(--correct-bg);color:var(--correct)}
-  .tag.ai{background:var(--ai-bg);color:var(--ai)}
-  .result h3{font-size:.95rem;margin-bottom:8px}
-  .answer{
-    background:var(--correct-bg);color:var(--correct);font-weight:bold;
-    padding:10px 12px;border-radius:8px;font-size:.95rem;
+  #q:focus{border-color:var(--accent)}
+  #clear{
+    font-family:-apple-system,Arial,sans-serif;
+    font-size:14px;
+    padding:0 14px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--card);
+    color:var(--muted);
+    cursor:pointer;
+    display:none;
   }
-  .answer.aians{background:var(--ai-bg);color:var(--ai)}
-  .expl{font-size:.85rem;color:#4a5563;margin-top:8px}
-  .err{background:#fbeaea;color:#a33;padding:12px;border-radius:8px;font-family:-apple-system,Arial,sans-serif;font-size:.85rem;display:none;margin:10px 0}
+  #count{
+    max-width:760px;
+    margin:6px auto 0;
+    font-family:-apple-system,Arial,sans-serif;
+    font-size:.75rem;
+    color:var(--muted);
+  }
+  main{max-width:760px;margin:0 auto;padding:16px 16px 80px}
+  .sec{
+    margin:26px 0 10px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--ink);
+  }
+  .sec h2{font-size:1.02rem;font-weight:bold}
+  .sec span{
+    font-family:-apple-system,Arial,sans-serif;
+    font-size:.72rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+    margin:12px 0;
+  }
+  .card .num{
+    font-family:-apple-system,Arial,sans-serif;
+    font-size:.68rem;
+    color:var(--accent);
+    letter-spacing:.06em;
+  }
+  .card h3{
+    font-size:.98rem;
+    font-weight:bold;
+    margin:3px 0 9px;
+  }
+  .card ul{list-style:none}
+  .card li{
+    font-size:.92rem;
+    padding:5px 8px 5px 26px;
+    position:relative;
+    color:#3c4652;
+    border-radius:6px;
+  }
+  .card li::before{
+    content:"✗";
+    position:absolute;
+    left:8px;
+    color:#b8b1a3;
+    font-size:.8rem;
+  }
+  .card li.ok{
+    background:var(--correct-bg);
+    color:var(--correct);
+    font-weight:bold;
+  }
+  .card li.ok::before{content:"✓";color:var(--correct)}
+  mark{background:var(--hl);color:inherit;border-radius:2px;padding:0 1px}
+  .noresults{
+    display:none;
+    text-align:center;
+    color:var(--muted);
+    font-family:-apple-system,Arial,sans-serif;
+    font-size:.9rem;
+    padding:40px 0;
+  }
+  .hidden{display:none}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>P&amp;C <b>Snap Answers</b></h1>
-  <p>Photo a practice question · get the answer instantly</p>
+  <h1>Property &amp; Casualty <b>Practice Tests</b></h1>
+  <p>Quizzes 1–4 · 152 questions · correct answers marked ✓</p>
 </header>
 
+<div class="searchwrap">
+  <div class="searchbar">
+    <input id="q" type="search" placeholder="Search questions &amp; answers… (or use Ctrl/Cmd+F)" autocomplete="off">
+    <button id="clear">Clear</button>
+  </div>
+  <div id="count"></div>
+</div>
+
 <main>
-  <button class="snapbtn" id="snap">📷 &nbsp;Snap a Question</button>
-  <div class="hint">Take a photo or choose a screenshot — works with multiple questions in one shot</div>
-  <input type="file" id="file" accept="image/*" capture="environment" style="display:none">
-  <img id="preview" alt="">
-  <div class="status" id="status"><span class="dot"></span><span id="statustext">Reading question…</span></div>
-  <div class="err" id="err"></div>
-  <div id="results"></div>
+<div class="noresults" id="nores">No matches. Try fewer or different words.</div>
+
+<div class="sec"><h2>Quiz 1 — Licensing, the Commissioner &amp; Ethics</h2><span>Scored 93.94%</span></div>
+
+<div class="card"><div class="num">Q1</div><h3>Every applicant for a license to act as an agent must have filed with the Commissioner:</h3><ul>
+<li class="ok">a notice of appointment to do business in the state.</li>
+<li>a request for application prior to being licensed in the state.</li>
+<li>a license number to be approved prior to receiving a license.</li>
+<li>an application for employment with the company employed with.</li></ul></div>
+
+<div class="card"><div class="num">Q2</div><h3>For an agent or solicitor to be valid to transact insurance requires:</h3><ul>
+<li>neither are required</li>
+<li>an appointment</li>
+<li>a proper license</li>
+<li class="ok">both are required</li></ul></div>
+
+<div class="card"><div class="num">Q3</div><h3>An organization ceases to exist as an entity eligible to hold a license upon all of the following EXCEPT:</h3><ul>
+<li>upon dissolution of a corporation.</li>
+<li>upon dissolution of a co-partnership or upon any change in membership of a co-partnership.</li>
+<li class="ok">upon the termination of a key employee.</li>
+<li>upon the termination of an association.</li></ul></div>
+
+<div class="card"><div class="num">Q4</div><h3>When should a licensee notify the Commissioner of a change in address?</h3><ul>
+<li class="ok">immediately</li>
+<li>within the 10 day grace period</li>
+<li>after notifying the company the licensee is employed with</li>
+<li>within the 30 day grace period</li></ul></div>
+
+<div class="card"><div class="num">Q5</div><h3>Which of the following is NOT a valid reason for the Commissioner to deny the use of a name when filing with the Insurance Commissioner?</h3><ul>
+<li>The name would interfere or is too similar to the name of another agency already licensed by the Commission.</li>
+<li>The name would lead the public in the wrong direction.</li>
+<li>The name gives the impression the licensee is authorized to conduct a type of business it cannot legally conduct.</li>
+<li class="ok">The name is politically connected to the government.</li></ul></div>
+
+<div class="card"><div class="num">Q6</div><h3>The Commissioner can suspend a permanent license without a hearing, except:</h3><ul>
+<li>none are exceptions</li>
+<li class="ok">client co-signing a loan</li>
+<li>conviction of any felony</li>
+<li>license revoked last 5 yrs</li></ul></div>
+
+<div class="card"><div class="num">Q7</div><h3>A licensee may surrender his/her license:</h3><ul>
+<li>after notifying the Commissioner and a mandatory 30 day waiting period.</li>
+<li>after the termination of employment with an insurer.</li>
+<li>after written notice to the Department and the Commissioner after the next January 1.</li>
+<li class="ok">upon written notice to the Department of Insurance at any time.</li></ul></div>
+
+<div class="card"><div class="num">Q8</div><h3>If a license is in the possession of the insurer or the licensee's employer, the licensee may surrender his/her license:</h3><ul>
+<li>after the termination of employment with an insurer.</li>
+<li class="ok">after written notice is delivered to the Commissioner.</li>
+<li>at any time.</li>
+<li>after notifying the Commissioner and a mandatory 30 days waiting period.</li></ul></div>
+
+<div class="card"><div class="num">Q9</div><h3>Every licensee shall prominently put their license number on all of the following except:</h3><ul>
+<li>Neighborhood advertising flyer</li>
+<li>Business cards</li>
+<li class="ok">Phone book listing in the white pages</li>
+<li>Price quote</li></ul></div>
+
+<div class="card"><div class="num">Q10</div><h3>Transacting insurance via the internet with a California resident would not require:</h3><ul>
+<li>name on license</li>
+<li>license number</li>
+<li class="ok">license expiration</li>
+<li>state licensee's domicile</li></ul></div>
+
+<div class="card"><div class="num">Q11</div><h3>A Property and Casualty Agent is required to continue their education by completing:</h3><ul>
+<li class="ok">a total of 24 hours per license term.</li>
+<li>a total of 100 hours during the first 4 years of licensing.</li>
+<li>a total of 25 hours during the first 2 years of licensing.</li>
+<li>a total of 55 hours during the first 2 years of licensing.</li></ul></div>
+
+<div class="card"><div class="num">Q12</div><h3>If someone has a Life Agent Combo and a Property/Casualty license for 10 years, then how many CE hours would be required in the current license term?</h3><ul>
+<li>30 hours</li>
+<li class="ok">24 hours</li>
+<li>25 hours</li>
+<li>50 hours</li></ul></div>
+
+<div class="card"><div class="num">Q13</div><h3>To handle long term care insurance, an agent of more than four years must satisfy the continuing education requirement of:</h3><ul>
+<li>a 4 hour course in each of the first 2 years of licensing.</li>
+<li>a 4 hour course in each of the first 4 years of licensing.</li>
+<li>an 8 hour course in each of the first 4 years of licensing.</li>
+<li class="ok">8 hours of LTC training each license term.</li></ul></div>
+
+<div class="card"><div class="num">Q14</div><h3>All Property and Casualty Broker/Agents are required by law to display to the public:</h3><ul>
+<li>The institution of education where they received their degree.</li>
+<li class="ok">Their license to sell insurance, displayed in a place where it can be easily seen.</li>
+<li>The types of insurance they are licensed to sell displayed in their personal office.</li>
+<li>Their license to sell insurance displayed in their training room.</li></ul></div>
+
+<div class="card"><div class="num">Q15</div><h3>According to the qualifications of an insurer under the California Code a person can be any of the following EXCEPT:</h3><ul>
+<li>a trust</li>
+<li class="ok">a human being at least age 16 who is competent and not intoxicated</li>
+<li>an estate of a deceased person</li>
+<li>a corporation</li></ul></div>
+
+<div class="card"><div class="num">Q16</div><h3>Which of the following is not a person under the Code?</h3><ul>
+<li>An estate of a deceased</li>
+<li class="ok">A family</li>
+<li>An entity</li>
+<li>An individual</li></ul></div>
+
+<div class="card"><div class="num">Q17</div><h3>Which of the following is NOT true about the California Insurance Code and the California Code of Regulations?</h3><ul>
+<li>The CIC is written, updated, and changed by the California State legislature.</li>
+<li class="ok">The CIC and the CCR are a complete guide to ethical behavior.</li>
+<li>The CIC gives the Commissioner the power to institute rules and regulations which are called the CCR.</li>
+<li>The Department of Insurance implements, enforces and monitors the CIC.</li></ul></div>
+
+<div class="card"><div class="num">Q18</div><h3>The Commissioner may give an order that records be brought current within:</h3><ul>
+<li>15 days of the order</li>
+<li class="ok">60 days of the order</li>
+<li>90 days of the order</li>
+<li>30 days of the order</li></ul></div>
+
+<div class="card"><div class="num">Q19</div><h3>Records must be made available to the Commissioner:</h3><ul>
+<li>upon written request</li>
+<li>within 30 days</li>
+<li class="ok">at all times</li>
+<li>within 5 days</li></ul></div>
+
+<div class="card"><div class="num">Q20</div><h3>Informational records must be kept a minimum of:</h3><ul>
+<li>12 months</li>
+<li>indefinitely</li>
+<li>5 years</li>
+<li class="ok">18 months</li></ul></div>
+
+<div class="card"><div class="num">Q21</div><h3>Agents must keep good records and make them available to the DOI for a period of:</h3><ul>
+<li>2 years</li>
+<li>1 year</li>
+<li class="ok">5 years</li>
+<li>3 years</li></ul></div>
+
+<div class="card"><div class="num">Q22</div><h3>What is the difference between an admitted and a non-admitted insurer?</h3><ul>
+<li>An admitted insurer has met all the qualifications designed by the DOI but hasn't received a Certificate of Authority because they are not licensed in the state of California, and a non-admitted insurer is licensed in the state of California.</li>
+<li>A non-admitted insurer is a company that has met all of the qualifications designed by the DOI and has received a Certificate of Authority from the DOI to transact insurance in California, whereas an admitted insurer has not complied or been denied.</li>
+<li>An admitted insurer is a company that has met most of the qualifications designed by the DOI and has received a Certificate of Authority from the DOI to transact insurance in California, whereas a non-admitted insurer has not applied or been denied.</li>
+<li class="ok">An admitted insurer is a company that has met all of the qualifications designed by the DOI and has received a Certificate of Authority to transact insurance in California, whereas a non-admitted insurer has not complied or been denied.</li></ul></div>
+
+<div class="card"><div class="num">Q23</div><h3>It is against the law for an insurance licensee to offer free insurance to:</h3><ul>
+<li class="ok">anyone as an incentive to acquire some other type of business.</li>
+<li>anyone, regardless the reason.</li>
+<li>family and other relatives.</li>
+<li>those who cannot afford it.</li></ul></div>
+
+<div class="card"><div class="num">Q24</div><h3>Insolvency means:</h3><ul>
+<li>an insurer's inability to meet the standards set by the DOI</li>
+<li class="ok">an insurer's inability to meet its financial obligations when they are due</li>
+<li>a company has more earned premium than claims made</li>
+<li>a company has more claims than earned premium to pay for those claims</li></ul></div>
+
+<div class="card"><div class="num">Q25</div><h3>________ refers to the inability of the insurer to meet its financial obligations when they are due.</h3><ul>
+<li>Actuarial</li>
+<li>Non-Admitted</li>
+<li class="ok">Insolvency</li>
+<li>Paid in capital</li></ul></div>
+
+<div class="card"><div class="num">Q26</div><h3>After providing an opportunity for a hearing, the Commissioner may deny an application for a license based on the following reasons EXCEPT:</h3><ul>
+<li class="ok">the applicant is disabled</li>
+<li>the applicant has acted as a licensed person before the license was issued</li>
+<li>the applicant lied on the application</li>
+<li>the applicant was convicted of a felony</li></ul></div>
+
+<div class="card"><div class="num">Q27</div><h3>In lieu of denying an application for a license the Commissioner can:</h3><ul>
+<li class="ok">issue a restricted license</li>
+<li>neither of these</li>
+<li>either of these</li>
+<li>charge extra fees</li></ul></div>
+
+<div class="card"><div class="num">Q28</div><h3>Appointments are terminated when:</h3><ul>
+<li>license fees paid late</li>
+<li>by either agent resignation or insurer termination</li>
+<li>termination of license</li>
+<li class="ok">any of these</li></ul></div>
+
+<div class="card"><div class="num">Q29</div><h3>When can a partnership continue if a new partner joins?</h3><ul>
+<li>After the new partner is issued a license by the department and the old license is terminated.</li>
+<li>After all the partners file a written notice with the Commissioner within 45 days.</li>
+<li class="ok">After the department is notified within 30 days and the changes are approved.</li>
+<li>After the Commissioner is notified and a new license is issued.</li></ul></div>
+
+<div class="card"><div class="num">Q30</div><h3>The marketing/sales department is responsible for:</h3><ul>
+<li>receiving claim requests, evaluating them, and paying those claims that are covered by the terms of the contract and rejecting those that are not.</li>
+<li class="ok">advertising, promoting and distributing an insurer's products to the public.</li>
+<li>receiving applications for insurance and then deciding if the company should approve or reject the application.</li>
+<li>using claims history, statistics, and computer data to predict losses.</li></ul></div>
+
+<div class="card"><div class="num">Q31</div><h3>The actuarial department is responsible for:</h3><ul>
+<li>receiving applications for insurance and then deciding if the company should approve or reject the application.</li>
+<li>receiving claim requests, evaluating them and paying those claims that are covered by the terms of the contract and rejecting those that is not.</li>
+<li>advertising, promoting and distributing an insurer's products to the public.</li>
+<li class="ok">using claims history, statistics and computer data to predict losses.</li></ul></div>
+
+<div class="card"><div class="num">Q32</div><h3>All of the following are examples of fiduciaries EXCEPT:</h3><ul>
+<li>Corporate directors</li>
+<li>Executors</li>
+<li>Administrators</li>
+<li class="ok">Vendor</li></ul></div>
+
+<div class="card"><div class="num">Q33</div><h3>A subsidiary formed to insure the parent company is called a(n):</h3><ul>
+<li>Inter-insurance exchange</li>
+<li class="ok">Captive insurer</li>
+<li>Fraternal</li>
+<li>Co-op insurer</li></ul></div>
+
+<div class="sec"><h2>Quiz 2 — Basic Insurance Concepts &amp; Contract Law</h2><span>Scored 71.43%</span></div>
+
+<div class="card"><div class="num">Q34</div><h3>The state of being subject to a loss is considered:</h3><ul>
+<li>risk</li>
+<li class="ok">exposure</li>
+<li>hazard</li>
+<li>insurance</li></ul></div>
+
+<div class="card"><div class="num">Q35</div><h3>Which of the following describes when one party intentionally gives the other party false information in order to benefit from the unlawful gain?</h3><ul>
+<li>Theft</li>
+<li class="ok">Fraud</li>
+<li>Concealment</li>
+<li>Misrepresentation</li></ul></div>
+
+<div class="card"><div class="num">Q36</div><h3>Which of the following statements is true about reinsurance?</h3><ul>
+<li>When an insurer obtains reinsurance, it has sold the contract to another insurer, and no longer has direct responsibility for the policy.</li>
+<li class="ok">Reinsurance is the process whereby the insurer transfers all or part of the risk to another company.</li>
+<li>Reinsurance is when the insured allows a policy to lapse for nonpayment. Later, if the insured makes the payment, the policy is reinsured.</li>
+<li>Property and casualty insurers use reinsurance, life insurers do not.</li></ul></div>
+
+<div class="card"><div class="num">Q37</div><h3>The law of large numbers is a principal that basically says:</h3><ul>
+<li>the larger the possibility of a loss, the greater the exposure.</li>
+<li>the larger the number of people in an insurance company, the more stable it is.</li>
+<li>the more insurance you have, the more protected you are.</li>
+<li class="ok">the larger the amount of information gathered, the more reliable that information will be.</li></ul></div>
+
+<div class="card"><div class="num">Q38</div><h3>A hazard is best defined as:</h3><ul>
+<li class="ok">anything that increases the chance of loss or severity of loss due to a peril.</li>
+<li>risk shifted from one to another.</li>
+<li>a possibility of a loss.</li>
+<li>any action from a court that increases the likelihood or size of a loss.</li></ul></div>
+
+<div class="card"><div class="num">Q39</div><h3>A peril is:</h3><ul>
+<li class="ok">the actual cause of the loss.</li>
+<li>a possibility of a loss.</li>
+<li>anything that increases the chance of loss or severity of loss.</li>
+<li>pure and speculative.</li></ul></div>
+
+<div class="card"><div class="num">Q40</div><h3>Performance depends upon an uncertain future event is the feature:</h3><ul>
+<li>adhesion</li>
+<li>conditional</li>
+<li class="ok">aleatory</li>
+<li>unilateral</li></ul></div>
+
+<div class="card"><div class="num">Q41</div><h3>Which of the following is NOT a known private insurer?</h3><ul>
+<li class="ok">Bond Insurance Companies</li>
+<li>Stock Insurance Companies</li>
+<li>Mutual Insurance Companies</li>
+<li>Reciprocal Insurance Exchanges</li></ul></div>
+
+<div class="card"><div class="num">Q42</div><h3>Which of the following are the main types of risks?</h3><ul>
+<li>Pure and Transfer</li>
+<li>Sharing and Transfer</li>
+<li>Avoidance and Retention</li>
+<li class="ok">Speculative and Pure</li></ul></div>
+
+<div class="card"><div class="num">Q43</div><h3>Which of the following is an example of an adverse underwriting decision?</h3><ul>
+<li>Charging a higher rate</li>
+<li>Rejecting the risk</li>
+<li>Issuing with limitations</li>
+<li class="ok">All of these are examples</li></ul></div>
+
+<div class="card"><div class="num">Q44</div><h3>Loss control refers to:</h3><ul>
+<li>a combination of risk control techniques with risk financing techniques.</li>
+<li class="ok">taking the necessary precautions that will reduce the risk of a loss.</li>
+<li>preventing a loss from becoming catastrophic.</li>
+<li>taking measures to prevent further damage during a loss.</li></ul></div>
+
+<div class="card"><div class="num">Q45</div><h3>According to the California insurance law, either party may rescind a contract for any of the following reasons EXCEPT:</h3><ul>
+<li>One party intentionally or unintentionally hides material information.</li>
+<li class="ok">Once a contract is signed, it can never be rescinded.</li>
+<li>If a representation is false in a material point, whether affirmative or promissory, the injured party is entitled to rescind the contract.</li>
+<li>One party intentionally omits information from the other party.</li></ul></div>
+
+<div class="card"><div class="num">Q46</div><h3>When a right or privilege has been given up, a party cannot reassert that right or privilege. The process of preventing the party from reasserting that right or privilege is known as:</h3><ul>
+<li>Waiver</li>
+<li class="ok">Estoppel</li>
+<li>Pro-rata</li>
+<li>Indemnity</li></ul></div>
+
+<div class="card"><div class="num">Q47</div><h3>A beautician stating that this hair conditioner fixes badly damaged hair is a:</h3><ul>
+<li>representation</li>
+<li>expressed warranty</li>
+<li>stated fact</li>
+<li class="ok">implied warranty</li></ul></div>
+
+<div class="card"><div class="num">Q48</div><h3>Which of the following is not a class of insurance?</h3><ul>
+<li>Auto</li>
+<li>Fire</li>
+<li>Marine</li>
+<li class="ok">Casualty</li></ul></div>
+
+<div class="card"><div class="num">Q49</div><h3>Restoring the insured back to the condition he or she was in before the loss occurred is known as:</h3><ul>
+<li>Loss Retention</li>
+<li class="ok">Indemnification</li>
+<li>Insurable Interest</li>
+<li>Restoration</li></ul></div>
+
+<div class="card"><div class="num">Q50</div><h3>Materiality is determined by the disadvantage placed on the other party and:</h3><ul>
+<li>not by the event</li>
+<li>the influence of the facts</li>
+<li class="ok">both are correct</li>
+<li>neither are correct</li></ul></div>
+
+<div class="card"><div class="num">Q51</div><h3>What are the two types of torts?</h3><ul>
+<li>Legal &amp; Non-Legal</li>
+<li class="ok">Intentional &amp; Unintentional</li>
+<li>Broad &amp; Basic</li>
+<li>Pure &amp; Speculative</li></ul></div>
+
+<div class="card"><div class="num">Q52</div><h3>Examples of tort law include all of the following EXCEPT:</h3><ul>
+<li class="ok">Breach of contract</li>
+<li>Personal injury</li>
+<li>Libel and slander</li>
+<li>Bodily injury</li></ul></div>
+
+<div class="card"><div class="num">Q53</div><h3>Type of loss exposure pertaining to land and structures attached to it is:</h3><ul>
+<li>liability loss exposure</li>
+<li>personal loss exposure</li>
+<li>financial loss exposure</li>
+<li class="ok">property loss exposure</li></ul></div>
+
+<div class="card"><div class="num">Q54</div><h3>Punishment for twisting or misrepresentation would be:</h3><ul>
+<li class="ok">both are correct</li>
+<li>up to 1 year in jail</li>
+<li>fine up to $25,000</li>
+<li>neither are correct</li></ul></div>
+
+<div class="card"><div class="num">Q55</div><h3>Which of the following is defined as "an agreement between two or more parties enforceable by law"?</h3><ul>
+<li>Tort</li>
+<li>Agreement Clause</li>
+<li class="ok">Contract</li>
+<li>Insurance Policy</li></ul></div>
+
+<div class="card"><div class="num">Q56</div><h3>Insurance is a contract whereby one undertakes to indemnify another against:</h3><ul>
+<li>Uncertainty</li>
+<li>Exposure</li>
+<li class="ok">Damage</li>
+<li>Physical hazard</li></ul></div>
+
+<div class="card"><div class="num">Q57</div><h3>The process of reviewing applications for insurance and the information on the application is:</h3><ul>
+<li>the job of the agent before accepting or rejecting an application</li>
+<li>Field Underwriting</li>
+<li class="ok">Underwriting</li>
+<li>Application Evaluation</li></ul></div>
+
+<div class="card"><div class="num">Q58</div><h3>Which of the following elements of a contract is/are the binding force?</h3><ul>
+<li>Offer &amp; Acceptance</li>
+<li>Competent Parties</li>
+<li>Legal Purpose</li>
+<li class="ok">Consideration</li></ul></div>
+
+<div class="card"><div class="num">Q59</div><h3>Substitution of a small certain loss for a large uncertain loss is:</h3><ul>
+<li>law of large numbers</li>
+<li>a pure risk</li>
+<li class="ok">insurance</li>
+<li>an insurable event</li></ul></div>
+
+<div class="card"><div class="num">Q60</div><h3>Bob is thinking about obtaining insurance because he just found out he needs extensive surgery that will require several days in the hospital. This situation of waiting until the last minute to obtain insurance is known as:</h3><ul>
+<li>Ideally Insurable Risk</li>
+<li>Spread of Risk</li>
+<li class="ok">Adverse Selection</li>
+<li>Cost Effective Insurance</li></ul></div>
+
+<div class="card"><div class="num">Q61</div><h3>Any contingent or unknown event, whether past or future, which may damnify a person having an insurable interest or create a liability against him/her, may be insured against. The more unpredictable a loss becomes:</h3><ul>
+<li>the less it becomes insurable interest.</li>
+<li>the less insurable it becomes.</li>
+<li class="ok">the more insurable it becomes.</li>
+<li>the more it becomes insurable interest.</li></ul></div>
+
+<div class="card"><div class="num">Q62</div><h3>The term loss exposure refers to:</h3><ul>
+<li>the uncertainty of a loss occurring.</li>
+<li>the actual cause of the loss.</li>
+<li>the increase in the possibility of a loss.</li>
+<li class="ok">the possibility of a loss.</li></ul></div>
+
+<div class="card"><div class="num">Q63</div><h3>A hazard that deals with a person's mental attitude, behavior and habits is an example of:</h3><ul>
+<li>Physical hazard</li>
+<li class="ok">Moral hazard</li>
+<li>Legal hazard</li>
+<li>Morale hazard</li></ul></div>
+
+<div class="card"><div class="num">Q64</div><h3>The degree of loss a person/organization faces from suits brought by a third party refers to:</h3><ul>
+<li>Property Exposure</li>
+<li class="ok">Liability Loss Exposure</li>
+<li>Human Personnel Loss Exposure</li>
+<li>Loss Exposure</li></ul></div>
+
+<div class="card"><div class="num">Q65</div><h3>Which of the following is NOT required for a risk to be ideally insurable?</h3><ul>
+<li class="ok">The loss must occur on the insured's property.</li>
+<li>The loss must be an accident.</li>
+<li>The loss must create economic hardship.</li>
+<li>The loss must be definite and measurable.</li></ul></div>
+
+<div class="card"><div class="num">Q66</div><h3>Which of the following is the amount of money the insured pays before the insurer pays for the rest of the claim?</h3><ul>
+<li>Subrogation</li>
+<li>Coinsurance</li>
+<li class="ok">Deductible</li>
+<li>Premium</li></ul></div>
+
+<div class="card"><div class="num">Q67</div><h3>When an insured rejects uninsured motorist in writing this is considered:</h3><ul>
+<li>a rescission</li>
+<li class="ok">a waiver</li>
+<li>an example of estoppel</li>
+<li>a modification</li></ul></div>
+
+<div class="card"><div class="num">Q68</div><h3>The uncertainty or chance of a loss occurring is known as:</h3><ul>
+<li class="ok">risk.</li>
+<li>risk management.</li>
+<li>pure risk.</li>
+<li>speculative risk.</li></ul></div>
+
+<div class="card"><div class="num">Q69</div><h3>Which of the following is NOT a source of information an underwriter might use to investigate an application in order to approve or reject it?</h3><ul>
+<li>Financial Reports</li>
+<li>Department of Motor Vehicles</li>
+<li class="ok">Department of Industrial Relations</li>
+<li>Medical Information Bureau</li></ul></div>
+
+<div class="card"><div class="num">Q70</div><h3>An insurance agent is appointed to transact:</h3><ul>
+<li>all lines of insurance</li>
+<li>all lines except 24hr care</li>
+<li>all classes of insurance</li>
+<li class="ok">all are incorrect</li></ul></div>
+
+<div class="card"><div class="num">Q71</div><h3>Which of the following is NOT a type of authority given to agents?</h3><ul>
+<li>Apparent authority</li>
+<li>Express authority</li>
+<li class="ok">Customary authority</li>
+<li>Implied authority</li></ul></div>
+
+<div class="card"><div class="num">Q72</div><h3>A broker can transact all of the following EXCEPT:</h3><ul>
+<li>Personal Lines</li>
+<li>Casualty insurance</li>
+<li>Property insurance</li>
+<li class="ok">Life, health, and disability insurance</li></ul></div>
+
+<div class="card"><div class="num">Q73</div><h3>In which of the following marketing distribution systems does the agent represent more than one insurer and more than one company?</h3><ul>
+<li>Direct mailing system</li>
+<li>Exclusive agency</li>
+<li class="ok">Independent agency</li>
+<li>Direct writing system</li></ul></div>
+
+<div class="card"><div class="num">Q74</div><h3>An insurer not authorized to conduct business in California would be:</h3><ul>
+<li>an unauthorized insurer</li>
+<li>a non-admitted insurer</li>
+<li class="ok">either of these</li>
+<li>neither of these</li></ul></div>
+
+<div class="card"><div class="num">Q75</div><h3>There are no binders issued in:</h3><ul>
+<li class="ok">Any of the above</li>
+<li>Life Policies in excess of $1 million</li>
+<li>in health insurance</li>
+<li>life insurance</li></ul></div>
+
+<div class="card"><div class="num">Q76</div><h3>Law of agency is the relationship between:</h3><ul>
+<li>insurer and customer</li>
+<li class="ok">agent and principal</li>
+<li>agent and client</li>
+<li>agency and agent</li></ul></div>
+
+<div class="card"><div class="num">Q77</div><h3>A person licensed as a broker/agent shall be deemed to be:</h3><ul>
+<li>involved in the business of financing the purchase of real estate</li>
+<li>responsible for deciding if an application should be approved or rejected</li>
+<li class="ok">acting as an insurance agent in the transaction of insurance placed with those for whom a notice of appointment has been filed with the Commissioner</li>
+<li>acting with the same authority granted a managing general agent</li></ul></div>
+
+<div class="card"><div class="num">Q78</div><h3>Which of the following is a responsibility of the insured in an insurance contract?</h3><ul>
+<li>Send the application to the underwriting department.</li>
+<li>Fully explain the policy to the client.</li>
+<li class="ok">Give true statements and information on the application.</li>
+<li>To complete the application.</li></ul></div>
+
+<div class="card"><div class="num">Q79</div><h3>The following acts are unlawful and are misdemeanors in California except when performed by a surplus lines broker EXCEPT:</h3><ul>
+<li>In any other manner, aiding a nonadmitted insurer to transact insurance business in this state.</li>
+<li class="ok">In any manner, advertising for an admitted insurer in this state.</li>
+<li>Acting as agent for a nonadmitted insurer in the transaction of insurance business in this state.</li>
+<li>In any manner, advertising for a nonadmitted insurer in this state.</li></ul></div>
+
+<div class="card"><div class="num">Q80</div><h3>Which marketing system does the insurer not own the expiration list?</h3><ul>
+<li>Direct writing system</li>
+<li>A direct mail system</li>
+<li class="ok">An independent agency</li>
+<li>A internet</li></ul></div>
+
+<div class="card"><div class="num">Q81</div><h3>Which of the following would not require a license?</h3><ul>
+<li>All require a license</li>
+<li class="ok">Insurance Adjuster</li>
+<li>Independent Adjuster</li>
+<li>Public Adjuster</li></ul></div>
+
+<div class="card"><div class="num">Q82</div><h3>The application is the document that:</h3><ul>
+<li>serves as a temporary contract that usually lasts 30 days.</li>
+<li>shows proof of insurance.</li>
+<li class="ok">states the name of the insured, the premium, and other facts that help the insurer decide whether to accept or reject it.</li>
+<li>shows the insured has coverage currently in force.</li></ul></div>
+
+<div class="card"><div class="num">Q83</div><h3>If an agent gives incorrect advice or unknowingly provides incorrect information to the client, which of the following liability insurance policies for nonmedical professionals is available to pay for losses or defend lawsuits that might be filed against him?</h3><ul>
+<li>Medical Insurance</li>
+<li>Liability insurance</li>
+<li>Nonadmitted</li>
+<li class="ok">Errors and Omissions</li></ul></div>
+
+<div class="card"><div class="num">Q84</div><h3>A ________ licensee is authorized to transact ONLY the following lines of insurance: Automobile, recreational vehicles (noncommercial purposes), personal watercraft, residential property, earthquake, flood, inland marine, umbrella (excess liability).</h3><ul>
+<li>Limited Lines Automobile</li>
+<li class="ok">Personal Lines</li>
+<li>Fire and Casualty</li>
+<li>Life Only</li></ul></div>
+
+<div class="card"><div class="num">Q85</div><h3>The underwriting process consists of all of the following basic steps except:</h3><ul>
+<li>Monitor the decision</li>
+<li>Implement the decision</li>
+<li class="ok">Issue the rate</li>
+<li>Gather necessary information</li></ul></div>
+
+<div class="card"><div class="num">Q86</div><h3>Which of the following is NOT an action a person performs when transacting insurance?</h3><ul>
+<li>The actual execution of a contract</li>
+<li>Any transactions that later result from the operation of the contract</li>
+<li class="ok">Calling an insurer for a price quote</li>
+<li>Solicitation of insurance</li></ul></div>
+
+<div class="card"><div class="num">Q87</div><h3>Monitoring of existing risks is:</h3><ul>
+<li>a code requirement</li>
+<li>conditional underwriting</li>
+<li class="ok">post-selection</li>
+<li>pre-selection</li></ul></div>
+
+<div class="card"><div class="num">Q88</div><h3>In a legal relationship, which authority does a principal (company) give the agent in writing?</h3><ul>
+<li class="ok">Express authority</li>
+<li>Implied authority</li>
+<li>Customary authority</li>
+<li>Apparent authority</li></ul></div>
+
+<div class="card"><div class="num">Q89</div><h3>Which of the following actions would not be considered transacting insurance?</h3><ul>
+<li>Emailing a prospect a auto quote.</li>
+<li>Giving a price quote over the phone.</li>
+<li class="ok">Handing a prospect a business card and asking them for information.</li>
+<li>Collecting premium for a policy.</li></ul></div>
+
+<div class="card"><div class="num">Q90</div><h3>In which system is the agent considered an employee?</h3><ul>
+<li>None of these</li>
+<li>Exclusive agency system</li>
+<li class="ok">Direct writing system</li>
+<li>A direct response system</li></ul></div>
+
+<div class="card"><div class="num">Q91</div><h3>A solicitor holds which license?</h3><ul>
+<li>P&amp;C broker-agent</li>
+<li>Personal lines broker-agent</li>
+<li>A solicitor's license</li>
+<li class="ok">Either P&amp;C broker-agent or Personal lines broker-agent</li></ul></div>
+
+<div class="card"><div class="num">Q92</div><h3>Which of the following is not true about the relationship between an agent and a solicitor?</h3><ul>
+<li>A solicitor cannot be employed by more than one fire and casualty broker/agent at the same time.</li>
+<li class="ok">An agent or broker cannot transact as a solicitor, but a solicitor can transact as a broker or agent.</li>
+<li>An agent represents the company, whereas the solicitor is an assistant to an agent and has no binding authority.</li>
+<li>A solicitor may give premium quotes over the phone, just like an agent.</li></ul></div>
+
+<div class="card"><div class="num">Q93</div><h3>When dealing with insurance in connection with sales or loans, violating the legal provisions specified by California law is considered a:</h3><ul>
+<li>fine</li>
+<li>felony</li>
+<li class="ok">misdemeanor</li>
+<li>penalty</li></ul></div>
+
+<div class="card"><div class="num">Q94</div><h3>Errors and omissions is a type of liability insurance:</h3><ul>
+<li>that indemnifies a client.</li>
+<li class="ok">that agents use to protect themselves if they give incorrect advice or do not do something that a client requested. (omission)</li>
+<li>for protection against misrepresentation when filing a declaration page.</li>
+<li>for insured's to use to protect themselves against a claim loss.</li></ul></div>
+
+<div class="card"><div class="num">Q95</div><h3>Any person who transacts insurance without a valid license is guilty of a misdemeanor, punishable by a fine not exceeding ______.</h3><ul>
+<li>$10,000</li>
+<li>$20,000</li>
+<li class="ok">$50,000</li>
+<li>$25,000</li></ul></div>
+
+<div class="card"><div class="num">Q96</div><h3>Binders can be extended how many additional days?</h3><ul>
+<li class="ok">60 days</li>
+<li>150 days</li>
+<li>30 days</li>
+<li>90 days</li></ul></div>
+
+<div class="sec"><h2>Quiz 3 — Regulation, the Commissioner &amp; Unfair Practices</h2><span>Field underwriting / regulation section</span></div>
+
+<div class="card"><div class="num">Q97</div><h3>Upon receiving any written or oral inquiry from the Department of Insurance concerning a claim, every licensee shall immediately, but in no event more than ______ calendar days of receipt of that inquiry, furnish the Department of Insurance with a complete written response based on the facts as then known by the licensee.</h3><ul>
+<li>30</li>
+<li class="ok">21</li>
+<li>14</li>
+<li>7</li></ul></div>
+
+<div class="card"><div class="num">Q98</div><h3>What is the role of the Commissioner and the Department of Insurance in relation to consumers?</h3><ul>
+<li class="ok">The Commissioner and the DOI are responsible for regulating the conduct of agents and insurers.</li>
+<li>The Commissioner and the DOI are responsible for making sure companies bring in more income than claims being paid out.</li>
+<li>The Commissioner and the DOI are responsible for advertising to the public the roles and responsibilities of insurance.</li>
+<li>The Commissioner and the DOI are responsible for making sure the public is given the opportunity to purchase insurance.</li></ul></div>
+
+<div class="card"><div class="num">Q99</div><h3>The State of California requires that all admitted insurers be a member of the:</h3><ul>
+<li class="ok">California Insurance Guaranty Association</li>
+<li>California Code and Ethics Board</li>
+<li>Privacy Protection Committee</li>
+<li>Insurance Board Council</li></ul></div>
+
+<div class="card"><div class="num">Q100</div><h3>To change the California Insurance Code a bill is brought before the Assembly and the Senate. After both parties vote on the bill and it is approved, it moves on to the:</h3><ul>
+<li>Commissioner</li>
+<li>State Senate</li>
+<li>Congress</li>
+<li class="ok">Governor</li></ul></div>
+
+<div class="card"><div class="num">Q101</div><h3>Once the insured and insurer are in agreement on a claim, the payment must be made within:</h3><ul>
+<li>15 calendar days</li>
+<li class="ok">30 calendar days</li>
+<li>30 business days</li>
+<li>15 business days</li></ul></div>
+
+<div class="card"><div class="num">Q102</div><h3>Which of the following is a penalty for violating the Insurance Information and Privacy Protection Act?</h3><ul>
+<li>$20,000 fine for violations committed with regularity showing they are a general business practice</li>
+<li>$5,000 fine for violations committed with regularity showing they are a general business practice</li>
+<li class="ok">$50,000 fine for violations committed with regularity showing they are a general business practice</li>
+<li>$100,000 fine for violations committed with regularity showing they are a general business practice</li></ul></div>
+
+<div class="card"><div class="num">Q103</div><h3>Penalty for violation of a summary seizure would be:</h3><ul>
+<li>$1,000</li>
+<li>1 yr imprisonment</li>
+<li>misdemeanor</li>
+<li class="ok">any and/or all of these</li></ul></div>
+
+<div class="card"><div class="num">Q104</div><h3>Which court case reversed the Paul vs. Virginia case of 1868?</h3><ul>
+<li>Public Law 15</li>
+<li class="ok">SEUA case of 1944</li>
+<li>McCarren-Ferguson Act of 1945</li>
+<li>Houghton-Mifflin case of 1938</li></ul></div>
+
+<div class="card"><div class="num">Q105</div><h3>Solvency requires the insurer to have enough assets to cover:</h3><ul>
+<li>paid-in-capital</li>
+<li>liabilities</li>
+<li>reinsurance</li>
+<li class="ok">all of these</li></ul></div>
+
+<div class="card"><div class="num">Q106</div><h3>A subsequent violation of a cease and desist would result in:</h3><ul>
+<li class="ok">license suspension</li>
+<li>a fine up to $55,000</li>
+<li>imprisonment up to 5 yrs</li>
+<li>a minimum fine of $5000</li></ul></div>
+
+<div class="card"><div class="num">Q107</div><h3>Which of the following describes prior approval as a type of rating law?</h3><ul>
+<li>Insurers compete with one another by quickly changing rates without review by the state regulators.</li>
+<li>An insurance company uses the rate they determine appropriate first and then file that rate with the commission.</li>
+<li>An insurance company must file the rates with the commission, but can then use those rates until they hear back from the commission.</li>
+<li class="ok">The insurer files policy rate information with the Department of Insurance. After filing, the insurer delivers evidence that the rates proposed are reasonable and fair. Then the insurer waits (30-60 days) for approval.</li></ul></div>
+
+<div class="card"><div class="num">Q108</div><h3>Which of the following is a responsibility of the Commissioner?</h3><ul>
+<li>To change the law of insurance.</li>
+<li>To form and appoint a council that will regulate the code.</li>
+<li>To write the laws of insurance.</li>
+<li class="ok">To enforce the laws of insurance.</li></ul></div>
+
+<div class="card"><div class="num">Q109</div><h3>Rates shall remain in effect if they are:</h3><ul>
+<li class="ok">all of the following</li>
+<li>not discriminatory</li>
+<li>adequate</li>
+<li>reasonable</li></ul></div>
+
+<div class="card"><div class="num">Q110</div><h3>According to the Code a "Notice of Claim" is a(n):</h3><ul>
+<li>neither qualify</li>
+<li class="ok">either qualify</li>
+<li>oral notification</li>
+<li>written notification</li></ul></div>
+
+<div class="card"><div class="num">Q111</div><h3>CIGA pertains to:</h3><ul>
+<li>insurer's fraud unit</li>
+<li>insurer's rating</li>
+<li>insurer's forms</li>
+<li class="ok">insurer's insolvency</li></ul></div>
+
+<div class="card"><div class="num">Q112</div><h3>In order to update, add or change a statute, a bill must be passed by the legislature and then presented to the governor. If the statute is passed, it will go into effect:</h3><ul>
+<li class="ok">on the next January 1st</li>
+<li>on the next August 1st</li>
+<li>on the next fiscal year</li>
+<li>immediately</li></ul></div>
+
+<div class="card"><div class="num">Q113</div><h3>When the Commissioner takes over a company that is insolvent, his/her first responsibility is to:</h3><ul>
+<li class="ok">attempt to restore the company if possible.</li>
+<li>liquidate the company and appoint new officers.</li>
+<li>shut down the company's operations and start a full investigation.</li>
+<li>sell all the company assets and pay any open claims.</li></ul></div>
+
+<div class="card"><div class="num">Q114</div><h3>Unless expressly otherwise provided, any personal notice required by any provision of the insurance code may be given by any of the following EXCEPT:</h3><ul>
+<li>notification at his residence or principal place of business</li>
+<li>postage prepaid</li>
+<li class="ok">a third party</li>
+<li>mailing notice</li></ul></div>
+
+<div class="card"><div class="num">Q115</div><h3>Which of the following is NOT a type of rating law?</h3><ul>
+<li>Use and file</li>
+<li>Prior approval</li>
+<li class="ok">Legal Competition</li>
+<li>File and use</li></ul></div>
+
+<div class="card"><div class="num">Q116</div><h3>Which of the following describes file and use as a type of rating law?</h3><ul>
+<li class="ok">An insurance company must file rates with the commission, but can then use those rates until they hear back from the commission.</li>
+<li>The insurer files policy rate information with the Department of Insurance. After filing, the insurer delivers evidence that the rates proposed are reasonable and fair. Then the insurer waits (30-60 days) for approval.</li>
+<li>Insurers compete with one another by quickly changing rates without review by the state regulators.</li>
+<li>An insurance company uses the rate they determine appropriate first and then file that rate with the commission, without getting prior approval.</li></ul></div>
+
+<div class="card"><div class="num">Q117</div><h3>An Insurer has up to how many days to accept or deny a claim?</h3><ul>
+<li>15 days</li>
+<li>21 days</li>
+<li>30 days</li>
+<li class="ok">40 days</li></ul></div>
+
+<div class="card"><div class="num">Q118</div><h3>According to the Code, the word "person" means:</h3><ul>
+<li class="ok">any person, association, organization, partnership, business trust, limited liability company, or corporation.</li>
+<li>the insurer in an insurance contract.</li>
+<li>the client seeking insurance.</li>
+<li>any person capable of binding an insurance contract.</li></ul></div>
+
+<div class="card"><div class="num">Q119</div><h3>Which of the following statements about insolvency is TRUE?</h3><ul>
+<li>An insurer cannot escape the condition of insolvency except by permission from the Commissioner.</li>
+<li>An insurer can escape the condition of insolvency by meeting its financial obligations when they are due.</li>
+<li class="ok">An insurer can escape the condition of insolvency by being able to provide for its liabilities and reinsurance of all outstanding risks.</li></ul></div>
+
+<div class="card"><div class="num">Q120</div><h3>How is the Insurance Commissioner put into office?</h3><ul>
+<li>Appointed by the governor</li>
+<li>Appointed by the previous commissioner</li>
+<li class="ok">Elected by the citizens</li>
+<li>Elected by the council</li></ul></div>
+
+<div class="card"><div class="num">Q121</div><h3>Every company in California is required to report its financial condition to the Commissioner every year:</h3><ul>
+<li class="ok">on or before March 1.</li>
+<li>on or before April 15.</li>
+<li>on or before January 1.</li>
+<li>on or before December 31.</li></ul></div>
+
+<div class="card"><div class="num">Q122</div><h3>Who administers the California Administrative Code of Regulations?</h3><ul>
+<li>Governor</li>
+<li>Congress</li>
+<li class="ok">Commissioner</li>
+<li>State Senate</li></ul></div>
+
+<div class="card"><div class="num">Q123</div><h3>Which of the following is NOT a purpose of the Unfair Practices Article?</h3><ul>
+<li>To protect the public from agents who practice bad methods of selling insurance.</li>
+<li>To regulate trade practices in the insurance business.</li>
+<li class="ok">To determine the punishment for an agent found guilty of unfair practices in insurance.</li>
+<li>To keep agents honest when selling insurance.</li></ul></div>
+
+<div class="card"><div class="num">Q124</div><h3>What is the significance of the SEUA (South East Underwriters Association) case of 1944?</h3><ul>
+<li>The court exempted the insurance industry from the federal regulation required for most interstate commerce industries.</li>
+<li class="ok">The court decided the federal government should regulate insurance.</li>
+<li>The court established the right of the states, instead of the federal government, to regulate insurance.</li>
+<li>The court gave authority to the federal government to apply antitrust laws to the insurance business that was not being regulated by the state level.</li></ul></div>
+
+<div class="card"><div class="num">Q125</div><h3>All of the following are incorrect penalties for violating the Unfair Practices article EXCEPT:</h3><ul>
+<li>$5,000 fine for each act in violation; $10,000 fine for willful violation</li>
+<li>$5,000 fine for each act in violation; $15,000 fine for willful violation</li>
+<li>$15,000 fine for the first offense; Minimum of 3 years in prison</li>
+<li class="ok">$10,000 fine for each act in violation; $50,000 fine for willful violation</li></ul></div>
+
+<div class="card"><div class="num">Q126</div><h3>Which is not a violation of Unfair Practice?</h3><ul>
+<li>Delaying an investigation</li>
+<li class="ok">Age discrimination</li>
+<li>Misrepresentation</li>
+<li>Defamation of an insurer</li></ul></div>
+
+<div class="card"><div class="num">Q127</div><h3>All of the following are penalties for unfair discrimination EXCEPT:</h3><ul>
+<li class="ok">prison</li>
+<li>$15,000-$100,000 for frequent violations</li>
+<li>$2,500 for first violation</li>
+<li>$5,000 for subsequent violations</li></ul></div>
+
+<div class="card"><div class="num">Q128</div><h3>All of the following are efforts the Department of Insurance takes to combat insurance fraud EXCEPT:</h3><ul>
+<li class="ok">Each company is required to submit a complete record of fraudulent claims made to the business each year.</li>
+<li>Every automobile insured is assessed about $1 per year to fund automobile insurance fraud task force activities.</li>
+<li>Every insurer pays an annual fee to fund the fraud detection units</li>
+<li>Each company is required to have a fraud detection unit.</li></ul></div>
+
+<div class="card"><div class="num">Q129</div><h3>Which of the following is NOT considered an unfair practice?</h3><ul>
+<li>Filing false financial documents.</li>
+<li>Making false statements that mislead the public.</li>
+<li>Unfairly discriminating against classes of insured's.</li>
+<li class="ok">Failing to display the license in a clearly visible place for the public to see.</li></ul></div>
+
+<div class="card"><div class="num">Q130</div><h3>If convicted of insurance fraud:</h3><ul>
+<li>the fine can be up to $10,000.</li>
+<li class="ok">the fine can be up to $150,000 and up to 5 years in state prison.</li>
+<li>the fine can be up to $50,000.</li>
+<li>the fine can be up to $10,000 and up to 5 years in state prison.</li></ul></div>
+
+<div class="card"><div class="num">Q131</div><h3>An example of a self-regulatory authority of the insurance industry is:</h3><ul>
+<li>the State legislature</li>
+<li class="ok">the NAIC</li>
+<li>the ISO</li>
+<li>the Commissioner</li></ul></div>
+
+<div class="sec"><h2>Quiz 4 — Property Policies, Fire &amp; Homeowners Forms</h2><span>Policy structure / HO forms section</span></div>
+
+<div class="card"><div class="num">Q132</div><h3>What is the difference between an HO 2 and an HO 4?</h3><ul>
+<li>An HO 2 is written on a Basic form, while an HO 4 is the Special or open peril form.</li>
+<li>An HO 4 is for condominium owners and an HO 2 is for tenants of the condominium.</li>
+<li>For an HO 2, the applicant must be the homeowner and all perils are covered unless they are excluded, whereas in an HO 4 the insured must be the owner or also be insured.</li>
+<li class="ok">An HO 2 is written on a broad form basis and covers the owner of a dwelling, whereas an HO 4 is a renter's insurance policy.</li></ul></div>
+
+<div class="card"><div class="num">Q133</div><h3>Property and casualty policies are made up of the following parts except:</h3><ul>
+<li>Definitions</li>
+<li>Declarations</li>
+<li class="ok">Additional Claim Form</li>
+<li>Conditions</li></ul></div>
+
+<div class="card"><div class="num">Q134</div><h3>What method of valuation means the company will decide the replacement cost of a lost item, then subtract depreciation from it and pay the rest?</h3><ul>
+<li>Market Value</li>
+<li>Agreed Value</li>
+<li class="ok">Actual Cash Value</li>
+<li>Replacement Cost</li></ul></div>
+
+<div class="card"><div class="num">Q135</div><h3>This Standard Mortgage clause states that a ________ has the right to file a claim, make premium payments, and be notified of any cancellations or non-renewals.</h3><ul>
+<li class="ok">Lienholder</li>
+<li>Insurance company</li>
+<li>Policy Owner</li>
+<li>Mortgage broker</li></ul></div>
+
+<div class="card"><div class="num">Q136</div><h3>The stipulations for nonrenewing of a personal lines policy include a notice of cancellation of the policy in writing to the insured at least ________ before the effective date of cancellation.</h3><ul>
+<li>60 days</li>
+<li>20 days</li>
+<li class="ok">45 days</li>
+<li>10 days</li></ul></div>
+
+<div class="card"><div class="num">Q137</div><h3>In a standard mortgage clause, what happens in the event of a total loss?</h3><ul>
+<li>The insurer pays the insured the full amount and the insured is expected to pay the lienholder.</li>
+<li>The insurer pays the lien holder the full amount and the lienholder pays the insured the remaining amount.</li>
+<li class="ok">The insurer pays the lienholder first and then the insured.</li>
+<li>The insurer pays the insured first and then the lien holder.</li></ul></div>
+
+<div class="card"><div class="num">Q138</div><h3>Which of the following homeowners policies covers renter's insurance?</h3><ul>
+<li>HO 1</li>
+<li>HO 2</li>
+<li class="ok">HO 4</li>
+<li>HO 8</li></ul></div>
+
+<div class="card"><div class="num">Q139</div><h3>Under personal lines insurance, dwelling insurance, which of the following perils is NOT covered on a standard fire policy?</h3><ul>
+<li>Lightening</li>
+<li>Removal</li>
+<li class="ok">Earthquake</li>
+<li>Fire</li></ul></div>
+
+<div class="card"><div class="num">Q140</div><h3>What is the main difference between the Standard Fire Policy (SFP) and the California Standard Form Fire Policy?</h3><ul>
+<li class="ok">The SFP has 165 lines of text and the California Standard Form Fire Policy has 158 lines of text.</li>
+<li>The SFP is under federal law, whereas the California Standard Form Fire Policy is under California state law.</li>
+<li>The SFP is standard for all companies in the U.S.</li>
+<li>The SFP is standard for all companies in the U.S. except California.</li></ul></div>
+
+<div class="card"><div class="num">Q141</div><h3>Cancellation for property and casualty policies for other than nonpayment is:</h3><ul>
+<li class="ok">Both 30 days except auto and 20 days for auto are correct.</li>
+<li>20 days for auto</li>
+<li>50 days except auto</li>
+<li>30 days except auto</li></ul></div>
+
+<div class="card"><div class="num">Q142</div><h3>The part of the policy that contains the description of coverages provided is:</h3><ul>
+<li>additional coverages</li>
+<li>conditions</li>
+<li class="ok">insuring agreement</li>
+<li>declarations page</li></ul></div>
+
+<div class="card"><div class="num">Q143</div><h3>When an insurer pays the full amount of a claim, based on an appraisal made at the time of the contract and the value determined before the loss occurs, this is referred to as:</h3><ul>
+<li>Market Value</li>
+<li>Actual Cash Value</li>
+<li class="ok">Stated Value</li>
+<li>Replacement Cost</li></ul></div>
+
+<div class="card"><div class="num">Q144</div><h3>When an insured holds more than one identical policy for the same property, but the policies differ in coverage amount or length of coverage period, this is known as:</h3><ul>
+<li>Standard Mortgage Clause</li>
+<li>Standard Policy Coverage</li>
+<li>Special Lines Surplus Lines</li>
+<li class="ok">Concurrent Policy Coverage</li></ul></div>
+
+<div class="card"><div class="num">Q145</div><h3>In an insurance policy, any modifications made to the regular contract are known as:</h3><ul>
+<li>Additional coverages</li>
+<li>Exclusions</li>
+<li>Conditions</li>
+<li class="ok">Endorsements</li></ul></div>
+
+<div class="card"><div class="num">Q146</div><h3>Policy provision that gives the insurer the right to repair or replace:</h3><ul>
+<li>loss payment</li>
+<li>loss settlement</li>
+<li class="ok">our option</li>
+<li>none of these</li></ul></div>
+
+<div class="card"><div class="num">Q147</div><h3>Policy revision that provides broader coverage, no premium or endorsement:</h3><ul>
+<li class="ok">liberalization</li>
+<li>recovery</li>
+<li>extension of coverage</li>
+<li>severability</li></ul></div>
+
+<div class="card"><div class="num">Q148</div><h3>A fire that is intentionally set and remains within its intended limits is:</h3><ul>
+<li>the definition of a fire</li>
+<li class="ok">not covered</li>
+<li>a hostile fire</li>
+<li>covered by fire insurance</li></ul></div>
+
+<div class="card"><div class="num">Q149</div><h3>In an insurance policy, which page contains information such as the insured's name, information about risk, the date coverage begins, the premium, location of the property being insured?</h3><ul>
+<li>Insuring Agreement</li>
+<li class="ok">Declarations</li>
+<li>Conditions</li>
+<li>Exclusions</li></ul></div>
+
+<div class="card"><div class="num">Q150</div><h3>Property insurance policies contain many items EXCEPT:</h3><ul>
+<li>The date the policy is effective</li>
+<li class="ok">Insured's gender</li>
+<li>Perils insured against</li>
+<li>Name of the insurer</li></ul></div>
+
+<div class="card"><div class="num">Q151</div><h3>Two policies from different insurers otherwise identical are known as:</h3><ul>
+<li>fraud</li>
+<li class="ok">concurrent coverage</li>
+<li>nonconcurrent coverage</li>
+<li>concurrent causation</li></ul></div>
+
+<div class="card"><div class="num">Q152</div><h3>Mid-termination of a policy is known as:</h3><ul>
+<li>policy termination</li>
+<li class="ok">cancellation</li>
+<li>rescission</li>
+<li>none of these</li></ul></div>
+
 </main>
 
 <script>
-const BANK = [{"n": "Q1", "q": "Every applicant for a license to act as an agent must have filed with the Commissioner:", "a": "a notice of appointment to do business in the state."}, {"n": "Q2", "q": "For an agent or solicitor to be valid to transact insurance requires:", "a": "both are required"}, {"n": "Q3", "q": "An organization ceases to exist as an entity eligible to hold a license upon all of the following EXCEPT:", "a": "upon the termination of a key employee."}, {"n": "Q4", "q": "When should a licensee notify the Commissioner of a change in address?", "a": "immediately"}, {"n": "Q5", "q": "Which of the following is NOT a valid reason for the Commissioner to deny the use of a name when filing with the Insurance Commissioner?", "a": "The name is politically connected to the government."}, {"n": "Q6", "q": "The Commissioner can suspend a permanent license without a hearing, except:", "a": "client co-signing a loan"}, {"n": "Q7", "q": "A licensee may surrender his/her license:", "a": "upon written notice to the Department of Insurance at any time."}, {"n": "Q8", "q": "If a license is in the possession of the insurer or the licensee's employer, the licensee may surrender his/her license:", "a": "after written notice is delivered to the Commissioner."}, {"n": "Q9", "q": "Every licensee shall prominently put their license number on all of the following except:", "a": "Phone book listing in the white pages"}, {"n": "Q10", "q": "Transacting insurance via the internet with a California resident would not require:", "a": "license expiration"}, {"n": "Q11", "q": "A Property and Casualty Agent is required to continue their education by completing:", "a": "a total of 24 hours per license term."}, {"n": "Q12", "q": "If someone has a Life Agent Combo and a Property/Casualty license for 10 years, then how many CE hours would be required in the current license term?", "a": "24 hours"}, {"n": "Q13", "q": "To handle long term care insurance, an agent of more than four years must satisfy the continuing education requirement of:", "a": "8 hours of LTC training each license term."}, {"n": "Q14", "q": "All Property and Casualty Broker/Agents are required by law to display to the public:", "a": "Their license to sell insurance, displayed in a place where it can be easily seen."}, {"n": "Q15", "q": "According to the qualifications of an insurer under the California Code a person can be any of the following EXCEPT:", "a": "a human being at least age 16 who is competent and not intoxicated"}, {"n": "Q16", "q": "Which of the following is not a person under the Code?", "a": "A family"}, {"n": "Q17", "q": "Which of the following is NOT true about the California Insurance Code and the California Code of Regulations?", "a": "The CIC and the CCR are a complete guide to ethical behavior."}, {"n": "Q18", "q": "The Commissioner may give an order that records be brought current within:", "a": "60 days of the order"}, {"n": "Q19", "q": "Records must be made available to the Commissioner:", "a": "at all times"}, {"n": "Q20", "q": "Informational records must be kept a minimum of:", "a": "18 months"}, {"n": "Q21", "q": "Agents must keep good records and make them available to the DOI for a period of:", "a": "5 years"}, {"n": "Q22", "q": "What is the difference between an admitted and a non-admitted insurer?", "a": "An admitted insurer is a company that has met all of the qualifications designed by the DOI and has received a Certificate of Authority to transact insurance in California, whereas a non-admitted insurer has not complied or been denied."}, {"n": "Q23", "q": "It is against the law for an insurance licensee to offer free insurance to:", "a": "anyone as an incentive to acquire some other type of business."}, {"n": "Q24", "q": "Insolvency means:", "a": "an insurer's inability to meet its financial obligations when they are due"}, {"n": "Q25", "q": "________ refers to the inability of the insurer to meet its financial obligations when they are due.", "a": "Insolvency"}, {"n": "Q26", "q": "After providing an opportunity for a hearing, the Commissioner may deny an application for a license based on the following reasons EXCEPT:", "a": "the applicant is disabled"}, {"n": "Q27", "q": "In lieu of denying an application for a license the Commissioner can:", "a": "issue a restricted license"}, {"n": "Q28", "q": "Appointments are terminated when:", "a": "any of these"}, {"n": "Q29", "q": "When can a partnership continue if a new partner joins?", "a": "After the department is notified within 30 days and the changes are approved."}, {"n": "Q30", "q": "The marketing/sales department is responsible for:", "a": "advertising, promoting and distributing an insurer's products to the public."}, {"n": "Q31", "q": "The actuarial department is responsible for:", "a": "using claims history, statistics and computer data to predict losses."}, {"n": "Q32", "q": "All of the following are examples of fiduciaries EXCEPT:", "a": "Vendor"}, {"n": "Q33", "q": "A subsidiary formed to insure the parent company is called a(n):", "a": "Captive insurer"}, {"n": "Q34", "q": "The state of being subject to a loss is considered:", "a": "exposure"}, {"n": "Q35", "q": "Which of the following describes when one party intentionally gives the other party false information in order to benefit from the unlawful gain?", "a": "Fraud"}, {"n": "Q36", "q": "Which of the following statements is true about reinsurance?", "a": "Reinsurance is the process whereby the insurer transfers all or part of the risk to another company."}, {"n": "Q37", "q": "The law of large numbers is a principal that basically says:", "a": "the larger the amount of information gathered, the more reliable that information will be."}, {"n": "Q38", "q": "A hazard is best defined as:", "a": "anything that increases the chance of loss or severity of loss due to a peril."}, {"n": "Q39", "q": "A peril is:", "a": "the actual cause of the loss."}, {"n": "Q40", "q": "Performance depends upon an uncertain future event is the feature:", "a": "aleatory"}, {"n": "Q41", "q": "Which of the following is NOT a known private insurer?", "a": "Bond Insurance Companies"}, {"n": "Q42", "q": "Which of the following are the main types of risks?", "a": "Speculative and Pure"}, {"n": "Q43", "q": "Which of the following is an example of an adverse underwriting decision?", "a": "All of these are examples"}, {"n": "Q44", "q": "Loss control refers to:", "a": "taking the necessary precautions that will reduce the risk of a loss."}, {"n": "Q45", "q": "According to the California insurance law, either party may rescind a contract for any of the following reasons EXCEPT:", "a": "Once a contract is signed, it can never be rescinded."}, {"n": "Q46", "q": "When a right or privilege has been given up, a party cannot reassert that right or privilege. The process of preventing the party from reasserting that right or privilege is known as:", "a": "Estoppel"}, {"n": "Q47", "q": "A beautician stating that this hair conditioner fixes badly damaged hair is a:", "a": "implied warranty"}, {"n": "Q48", "q": "Which of the following is not a class of insurance?", "a": "Casualty"}, {"n": "Q49", "q": "Restoring the insured back to the condition he or she was in before the loss occurred is known as:", "a": "Indemnification"}, {"n": "Q50", "q": "Materiality is determined by the disadvantage placed on the other party and:", "a": "both are correct"}, {"n": "Q51", "q": "What are the two types of torts?", "a": "Intentional & Unintentional"}, {"n": "Q52", "q": "Examples of tort law include all of the following EXCEPT:", "a": "Breach of contract"}, {"n": "Q53", "q": "Type of loss exposure pertaining to land and structures attached to it is:", "a": "property loss exposure"}, {"n": "Q54", "q": "Punishment for twisting or misrepresentation would be:", "a": "both are correct"}, {"n": "Q55", "q": "Which of the following is defined as \"an agreement between two or more parties enforceable by law\"?", "a": "Contract"}, {"n": "Q56", "q": "Insurance is a contract whereby one undertakes to indemnify another against:", "a": "Damage"}, {"n": "Q57", "q": "The process of reviewing applications for insurance and the information on the application is:", "a": "Underwriting"}, {"n": "Q58", "q": "Which of the following elements of a contract is/are the binding force?", "a": "Consideration"}, {"n": "Q59", "q": "Substitution of a small certain loss for a large uncertain loss is:", "a": "insurance"}, {"n": "Q60", "q": "Bob is thinking about obtaining insurance because he just found out he needs extensive surgery that will require several days in the hospital. This situation of waiting until the last minute to obtain insurance is known as:", "a": "Adverse Selection"}, {"n": "Q61", "q": "Any contingent or unknown event, whether past or future, which may damnify a person having an insurable interest or create a liability against him/her, may be insured against. The more unpredictable a loss becomes:", "a": "the more insurable it becomes."}, {"n": "Q62", "q": "The term loss exposure refers to:", "a": "the possibility of a loss."}, {"n": "Q63", "q": "A hazard that deals with a person's mental attitude, behavior and habits is an example of:", "a": "Moral hazard"}, {"n": "Q64", "q": "The degree of loss a person/organization faces from suits brought by a third party refers to:", "a": "Liability Loss Exposure"}, {"n": "Q65", "q": "Which of the following is NOT required for a risk to be ideally insurable?", "a": "The loss must occur on the insured's property."}, {"n": "Q66", "q": "Which of the following is the amount of money the insured pays before the insurer pays for the rest of the claim?", "a": "Deductible"}, {"n": "Q67", "q": "When an insured rejects uninsured motorist in writing this is considered:", "a": "a waiver"}, {"n": "Q68", "q": "The uncertainty or chance of a loss occurring is known as:", "a": "risk."}, {"n": "Q69", "q": "Which of the following is NOT a source of information an underwriter might use to investigate an application in order to approve or reject it?", "a": "Department of Industrial Relations"}, {"n": "Q70", "q": "An insurance agent is appointed to transact:", "a": "all are incorrect"}, {"n": "Q71", "q": "Which of the following is NOT a type of authority given to agents?", "a": "Customary authority"}, {"n": "Q72", "q": "A broker can transact all of the following EXCEPT:", "a": "Life, health, and disability insurance"}, {"n": "Q73", "q": "In which of the following marketing distribution systems does the agent represent more than one insurer and more than one company?", "a": "Independent agency"}, {"n": "Q74", "q": "An insurer not authorized to conduct business in California would be:", "a": "either of these"}, {"n": "Q75", "q": "There are no binders issued in:", "a": "Any of the above"}, {"n": "Q76", "q": "Law of agency is the relationship between:", "a": "agent and principal"}, {"n": "Q77", "q": "A person licensed as a broker/agent shall be deemed to be:", "a": "acting as an insurance agent in the transaction of insurance placed with those for whom a notice of appointment has been filed with the Commissioner"}, {"n": "Q78", "q": "Which of the following is a responsibility of the insured in an insurance contract?", "a": "Give true statements and information on the application."}, {"n": "Q79", "q": "The following acts are unlawful and are misdemeanors in California except when performed by a surplus lines broker EXCEPT:", "a": "In any manner, advertising for an admitted insurer in this state."}, {"n": "Q80", "q": "Which marketing system does the insurer not own the expiration list?", "a": "An independent agency"}, {"n": "Q81", "q": "Which of the following would not require a license?", "a": "Insurance Adjuster"}, {"n": "Q82", "q": "The application is the document that:", "a": "states the name of the insured, the premium, and other facts that help the insurer decide whether to accept or reject it."}, {"n": "Q83", "q": "If an agent gives incorrect advice or unknowingly provides incorrect information to the client, which of the following liability insurance policies for nonmedical professionals is available to pay for losses or defend lawsuits that might be filed against him?", "a": "Errors and Omissions"}, {"n": "Q84", "q": "A ________ licensee is authorized to transact ONLY the following lines of insurance: Automobile, recreational vehicles (noncommercial purposes), personal watercraft, residential property, earthquake, flood, inland marine, umbrella (excess liability).", "a": "Personal Lines"}, {"n": "Q85", "q": "The underwriting process consists of all of the following basic steps except:", "a": "Issue the rate"}, {"n": "Q86", "q": "Which of the following is NOT an action a person performs when transacting insurance?", "a": "Calling an insurer for a price quote"}, {"n": "Q87", "q": "Monitoring of existing risks is:", "a": "post-selection"}, {"n": "Q88", "q": "In a legal relationship, which authority does a principal (company) give the agent in writing?", "a": "Express authority"}, {"n": "Q89", "q": "Which of the following actions would not be considered transacting insurance?", "a": "Handing a prospect a business card and asking them for information."}, {"n": "Q90", "q": "In which system is the agent considered an employee?", "a": "Direct writing system"}, {"n": "Q91", "q": "A solicitor holds which license?", "a": "Either P&C broker-agent or Personal lines broker-agent"}, {"n": "Q92", "q": "Which of the following is not true about the relationship between an agent and a solicitor?", "a": "An agent or broker cannot transact as a solicitor, but a solicitor can transact as a broker or agent."}, {"n": "Q93", "q": "When dealing with insurance in connection with sales or loans, violating the legal provisions specified by California law is considered a:", "a": "misdemeanor"}, {"n": "Q94", "q": "Errors and omissions is a type of liability insurance:", "a": "that agents use to protect themselves if they give incorrect advice or do not do something that a client requested. (omission)"}, {"n": "Q95", "q": "Any person who transacts insurance without a valid license is guilty of a misdemeanor, punishable by a fine not exceeding ______.", "a": "$50,000"}, {"n": "Q96", "q": "Binders can be extended how many additional days?", "a": "60 days"}, {"n": "Q97", "q": "Upon receiving any written or oral inquiry from the Department of Insurance concerning a claim, every licensee shall immediately, but in no event more than ______ calendar days of receipt of that inquiry, furnish the Department of Insurance with a complete written response based on the facts as then known by the licensee.", "a": "21"}, {"n": "Q98", "q": "What is the role of the Commissioner and the Department of Insurance in relation to consumers?", "a": "The Commissioner and the DOI are responsible for regulating the conduct of agents and insurers."}, {"n": "Q99", "q": "The State of California requires that all admitted insurers be a member of the:", "a": "California Insurance Guaranty Association"}, {"n": "Q100", "q": "To change the California Insurance Code a bill is brought before the Assembly and the Senate. After both parties vote on the bill and it is approved, it moves on to the:", "a": "Governor"}, {"n": "Q101", "q": "Once the insured and insurer are in agreement on a claim, the payment must be made within:", "a": "30 calendar days"}, {"n": "Q102", "q": "Which of the following is a penalty for violating the Insurance Information and Privacy Protection Act?", "a": "$50,000 fine for violations committed with regularity showing they are a general business practice"}, {"n": "Q103", "q": "Penalty for violation of a summary seizure would be:", "a": "any and/or all of these"}, {"n": "Q104", "q": "Which court case reversed the Paul vs. Virginia case of 1868?", "a": "SEUA case of 1944"}, {"n": "Q105", "q": "Solvency requires the insurer to have enough assets to cover:", "a": "all of these"}, {"n": "Q106", "q": "A subsequent violation of a cease and desist would result in:", "a": "license suspension"}, {"n": "Q107", "q": "Which of the following describes prior approval as a type of rating law?", "a": "The insurer files policy rate information with the Department of Insurance. After filing, the insurer delivers evidence that the rates proposed are reasonable and fair. Then the insurer waits (30-60 days) for approval."}, {"n": "Q108", "q": "Which of the following is a responsibility of the Commissioner?", "a": "To enforce the laws of insurance."}, {"n": "Q109", "q": "Rates shall remain in effect if they are:", "a": "all of the following"}, {"n": "Q110", "q": "According to the Code a \"Notice of Claim\" is a(n):", "a": "either qualify"}, {"n": "Q111", "q": "CIGA pertains to:", "a": "insurer's insolvency"}, {"n": "Q112", "q": "In order to update, add or change a statute, a bill must be passed by the legislature and then presented to the governor. If the statute is passed, it will go into effect:", "a": "on the next January 1st"}, {"n": "Q113", "q": "When the Commissioner takes over a company that is insolvent, his/her first responsibility is to:", "a": "attempt to restore the company if possible."}, {"n": "Q114", "q": "Unless expressly otherwise provided, any personal notice required by any provision of the insurance code may be given by any of the following EXCEPT:", "a": "a third party"}, {"n": "Q115", "q": "Which of the following is NOT a type of rating law?", "a": "Legal Competition"}, {"n": "Q116", "q": "Which of the following describes file and use as a type of rating law?", "a": "An insurance company must file rates with the commission, but can then use those rates until they hear back from the commission."}, {"n": "Q117", "q": "An Insurer has up to how many days to accept or deny a claim?", "a": "40 days"}, {"n": "Q118", "q": "According to the Code, the word \"person\" means:", "a": "any person, association, organization, partnership, business trust, limited liability company, or corporation."}, {"n": "Q119", "q": "Which of the following statements about insolvency is TRUE?", "a": "An insurer can escape the condition of insolvency by being able to provide for its liabilities and reinsurance of all outstanding risks."}, {"n": "Q120", "q": "How is the Insurance Commissioner put into office?", "a": "Elected by the citizens"}, {"n": "Q121", "q": "Every company in California is required to report its financial condition to the Commissioner every year:", "a": "on or before March 1."}, {"n": "Q122", "q": "Who administers the California Administrative Code of Regulations?", "a": "Commissioner"}, {"n": "Q123", "q": "Which of the following is NOT a purpose of the Unfair Practices Article?", "a": "To determine the punishment for an agent found guilty of unfair practices in insurance."}, {"n": "Q124", "q": "What is the significance of the SEUA (South East Underwriters Association) case of 1944?", "a": "The court decided the federal government should regulate insurance."}, {"n": "Q125", "q": "All of the following are incorrect penalties for violating the Unfair Practices article EXCEPT:", "a": "$10,000 fine for each act in violation; $50,000 fine for willful violation"}, {"n": "Q126", "q": "Which is not a violation of Unfair Practice?", "a": "Age discrimination"}, {"n": "Q127", "q": "All of the following are penalties for unfair discrimination EXCEPT:", "a": "prison"}, {"n": "Q128", "q": "All of the following are efforts the Department of Insurance takes to combat insurance fraud EXCEPT:", "a": "Each company is required to submit a complete record of fraudulent claims made to the business each year."}, {"n": "Q129", "q": "Which of the following is NOT considered an unfair practice?", "a": "Failing to display the license in a clearly visible place for the public to see."}, {"n": "Q130", "q": "If convicted of insurance fraud:", "a": "the fine can be up to $150,000 and up to 5 years in state prison."}, {"n": "Q131", "q": "An example of a self-regulatory authority of the insurance industry is:", "a": "the NAIC"}, {"n": "Q132", "q": "What is the difference between an HO 2 and an HO 4?", "a": "An HO 2 is written on a broad form basis and covers the owner of a dwelling, whereas an HO 4 is a renter's insurance policy."}, {"n": "Q133", "q": "Property and casualty policies are made up of the following parts except:", "a": "Additional Claim Form"}, {"n": "Q134", "q": "What method of valuation means the company will decide the replacement cost of a lost item, then subtract depreciation from it and pay the rest?", "a": "Actual Cash Value"}, {"n": "Q135", "q": "This Standard Mortgage clause states that a ________ has the right to file a claim, make premium payments, and be notified of any cancellations or non-renewals.", "a": "Lienholder"}, {"n": "Q136", "q": "The stipulations for nonrenewing of a personal lines policy include a notice of cancellation of the policy in writing to the insured at least ________ before the effective date of cancellation.", "a": "45 days"}, {"n": "Q137", "q": "In a standard mortgage clause, what happens in the event of a total loss?", "a": "The insurer pays the lienholder first and then the insured."}, {"n": "Q138", "q": "Which of the following homeowners policies covers renter's insurance?", "a": "HO 4"}, {"n": "Q139", "q": "Under personal lines insurance, dwelling insurance, which of the following perils is NOT covered on a standard fire policy?", "a": "Earthquake"}, {"n": "Q140", "q": "What is the main difference between the Standard Fire Policy (SFP) and the California Standard Form Fire Policy?", "a": "The SFP has 165 lines of text and the California Standard Form Fire Policy has 158 lines of text."}, {"n": "Q141", "q": "Cancellation for property and casualty policies for other than nonpayment is:", "a": "Both 30 days except auto and 20 days for auto are correct."}, {"n": "Q142", "q": "The part of the policy that contains the description of coverages provided is:", "a": "insuring agreement"}, {"n": "Q143", "q": "When an insurer pays the full amount of a claim, based on an appraisal made at the time of the contract and the value determined before the loss occurs, this is referred to as:", "a": "Stated Value"}, {"n": "Q144", "q": "When an insured holds more than one identical policy for the same property, but the policies differ in coverage amount or length of coverage period, this is known as:", "a": "Concurrent Policy Coverage"}, {"n": "Q145", "q": "In an insurance policy, any modifications made to the regular contract are known as:", "a": "Endorsements"}, {"n": "Q146", "q": "Policy provision that gives the insurer the right to repair or replace:", "a": "our option"}, {"n": "Q147", "q": "Policy revision that provides broader coverage, no premium or endorsement:", "a": "liberalization"}, {"n": "Q148", "q": "A fire that is intentionally set and remains within its intended limits is:", "a": "not covered"}, {"n": "Q149", "q": "In an insurance policy, which page contains information such as the insured's name, information about risk, the date coverage begins, the premium, location of the property being insured?", "a": "Declarations"}, {"n": "Q150", "q": "Property insurance policies contain many items EXCEPT:", "a": "Insured's gender"}, {"n": "Q151", "q": "Two policies from different insurers otherwise identical are known as:", "a": "concurrent coverage"}, {"n": "Q152", "q": "Mid-termination of a policy is known as:", "a": "cancellation"}];
+(function(){
+  var input = document.getElementById('q');
+  var clearBtn = document.getElementById('clear');
+  var count = document.getElementById('count');
+  var nores = document.getElementById('nores');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+  var secs = Array.prototype.slice.call(document.querySelectorAll('.sec'));
 
-const fileInput = document.getElementById('file');
-const preview = document.getElementById('preview');
-const status = document.getElementById('status');
-const statustext = document.getElementById('statustext');
-const results = document.getElementById('results');
-const errBox = document.getElementById('err');
+  // cache original HTML for de-highlighting
+  cards.forEach(function(c){ c.dataset.orig = c.innerHTML; });
 
-document.getElementById('snap').addEventListener('click', () => fileInput.click());
+  function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
-fileInput.addEventListener('change', async () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-  errBox.style.display = 'none';
-  results.innerHTML = '';
-
-  const dataUrl = await new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-  preview.src = dataUrl;
-  preview.style.display = 'block';
-
-  // downscale large photos so the request stays fast
-  const scaled = await downscale(dataUrl, 1600);
-  const base64 = scaled.data;
-  const mediaType = scaled.type;
-
-  status.style.display = 'block';
-  statustext.textContent = 'Reading question…';
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text:
-`This photo shows one or more California Property & Casualty insurance licensing practice exam questions.
-
-Extract EVERY complete multiple-choice question visible in the image (ignore partially cut-off questions). For each, give your best answer as an insurance licensing expert.
-
-Respond ONLY with a JSON array, no markdown fences, no preamble:
-[{"question":"full question text","answer":"the correct answer choice text","explanation":"one short sentence why"}]` }
-          ]
-        }]
-      })
-    });
-    const data = await response.json();
-    const text = (data.content || []).map(i => i.text || '').join('');
-    const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-    status.style.display = 'none';
-    render(parsed);
-  } catch (e) {
-    status.style.display = 'none';
-    errBox.textContent = 'Could not read the photo — try a clearer shot with the full question visible.';
-    errBox.style.display = 'block';
-    console.error(e);
-  }
-  fileInput.value = '';
-});
-
-function downscale(dataUrl, maxW){
-  return new Promise(res => {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, maxW / img.width);
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      const out = canvas.toDataURL('image/jpeg', 0.85);
-      res({ data: out.split(',')[1], type: 'image/jpeg' });
-    };
-    img.src = dataUrl;
-  });
-}
-
-// --- fuzzy match against the verified bank ---
-const STOP = new Set(['the','a','an','of','is','are','to','in','for','and','or','which','following','what','that','be','on','as','with','by']);
-function tokens(s){
-  return s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w => w && !STOP.has(w));
-}
-function matchBank(q){
-  const qt = new Set(tokens(q));
-  let best = null, bestScore = 0;
-  for (const item of BANK){
-    const bt = tokens(item.q);
-    if (!bt.length) continue;
-    let hit = 0;
-    for (const w of bt) if (qt.has(w)) hit++;
-    const score = hit / Math.max(bt.length, qt.size);
-    if (score > bestScore){ bestScore = score; best = item; }
-  }
-  return bestScore >= 0.55 ? best : null;
-}
-
-function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-function render(items){
-  if (!Array.isArray(items) || !items.length){
-    errBox.textContent = 'No complete questions found in that photo.';
-    errBox.style.display = 'block';
-    return;
-  }
-  results.innerHTML = items.map(item => {
-    const hit = matchBank(item.question || '');
-    if (hit){
-      return `<div class="result">
-        <span class="tag bank">✓ Verified — ${esc(hit.n)} in your quiz bank</span>
-        <h3>${esc(hit.q)}</h3>
-        <div class="answer">✓ ${esc(hit.a)}</div>
-        ${item.explanation ? `<div class="expl">${esc(item.explanation)}</div>` : ''}
-      </div>`;
+  function highlight(node, re){
+    if(node.nodeType === 3){
+      var m = node.data.match(re);
+      if(m){
+        var idx = node.data.search(re);
+        var mark = document.createElement('mark');
+        var mid = node.splitText(idx);
+        mid.splitText(m[0].length);
+        mark.appendChild(mid.cloneNode(true));
+        mid.parentNode.replaceChild(mark, mid);
+        return 1;
+      }
+    } else if(node.nodeType === 1 && node.childNodes && node.tagName !== 'MARK'){
+      for(var i=0;i<node.childNodes.length;i++){
+        i += highlight(node.childNodes[i], re);
+      }
     }
-    return `<div class="result">
-      <span class="tag ai">AI answer — not in your bank yet</span>
-      <h3>${esc(item.question || '')}</h3>
-      <div class="answer aians">${esc(item.answer || '')}</div>
-      ${item.explanation ? `<div class="expl">${esc(item.explanation)}</div>` : ''}
-    </div>`;
-  }).join('');
-}
+    return 0;
+  }
+
+  function run(){
+    var term = input.value.trim();
+    clearBtn.style.display = term ? 'block' : 'none';
+    var shown = 0;
+
+    cards.forEach(function(c){
+      c.innerHTML = c.dataset.orig; // reset highlights
+      if(!term){
+        c.classList.remove('hidden');
+        shown++;
+        return;
+      }
+      var hay = c.textContent.toLowerCase();
+      var words = term.toLowerCase().split(/\s+/);
+      var match = words.every(function(w){ return hay.indexOf(w) !== -1; });
+      c.classList.toggle('hidden', !match);
+      if(match){
+        shown++;
+        words.forEach(function(w){
+          highlight(c, new RegExp(esc(w), 'i'));
+        });
+      }
+    });
+
+    // hide section headers with no visible cards
+    secs.forEach(function(s){
+      var el = s.nextElementSibling, any = false;
+      while(el && !el.classList.contains('sec')){
+        if(el.classList.contains('card') && !el.classList.contains('hidden')) any = true;
+        el = el.nextElementSibling;
+      }
+      s.classList.toggle('hidden', !any);
+    });
+
+    nores.style.display = (term && shown === 0) ? 'block' : 'none';
+    count.textContent = term ? shown + ' of ' + cards.length + ' questions match' : '';
+  }
+
+  input.addEventListener('input', run);
+  clearBtn.addEventListener('click', function(){ input.value=''; run(); input.focus(); });
+})();
 </script>
 </body>
 </html>
