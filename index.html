@@ -79,6 +79,20 @@
     cursor:pointer;
     display:none;
   }
+  #mic{
+    font-size:18px;
+    padding:0 12px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    background:var(--card);
+    cursor:pointer;
+  }
+  #mic.listening{
+    border-color:#c0392b;
+    background:#fbeaea;
+    animation:miclisten .9s infinite alternate;
+  }
+  @keyframes miclisten{from{box-shadow:0 0 0 0 rgba(192,57,43,.35)}to{box-shadow:0 0 0 6px rgba(192,57,43,0)}}
   #count{
     max-width:760px;
     margin:6px auto 0;
@@ -155,12 +169,13 @@
 
 <header>
   <h1>Property &amp; Casualty <b>Practice Tests</b></h1>
-  <p>Quizzes 1–4 · 152 questions · correct answers marked ✓</p>
+  <p>Quizzes 1–5 · 199 questions · correct answers marked ✓</p>
 </header>
 
 <div class="searchwrap">
   <div class="searchbar">
     <input id="q" type="search" placeholder="Search questions &amp; answers… (or use Ctrl/Cmd+F)" autocomplete="off">
+    <button id="mic" title="Voice search">🎤</button>
     <button id="clear">Clear</button>
   </div>
   <div id="count"></div>
@@ -1088,6 +1103,289 @@
 <li>rescission</li>
 <li>none of these</li></ul></div>
 
+<div class="sec"><h2>Quiz 5 — Homeowners &amp; Dwelling Policy Deep Dive</h2><span>HO/DP coverages, sections &amp; endorsements</span></div>
+
+<div class="card"><div class="num">Q153</div><h3>Which is not a liability endorsement on the HO forms?</h3><ul>
+<li>Watercraft</li>
+<li>Business pursuits</li>
+<li class="ok">Mobilehome</li>
+<li>Personal injury</li></ul></div>
+
+<div class="card"><div class="num">Q154</div><h3>Under Section II of the Homeowners form, what does coverage E (personal liability) cover?</h3><ul>
+<li class="ok">This coverage will take affect if a claim is made against the insured for damages due to bodily injury or damage to the property caused by the insured's negligent acts.</li>
+<li>This coverage will take affect if the insured is hurt at work and needs medical attention.</li>
+<li>This coverage will take affect if the insured is injured and needs medical attention.</li>
+<li>This coverage will take affect if the insured's business is sued.</li></ul></div>
+
+<div class="card"><div class="num">Q155</div><h3>How are HO-8, HO-2, HO-3 and HO-5 different?</h3><ul>
+<li class="ok">Perils insured against</li>
+<li>Coverage A, B, and C</li>
+<li>Liability coverages</li>
+<li>All of these</li></ul></div>
+
+<div class="card"><div class="num">Q156</div><h3>Which DP policies insure Coverage C for broad form perils?</h3><ul>
+<li>DP-1, DP-2 and DP-3</li>
+<li>DP-3</li>
+<li class="ok">Both DP-2 and DP-3</li>
+<li>DP-2</li></ul></div>
+
+<div class="card"><div class="num">Q157</div><h3>The Homeowners Watercraft Endorsement under Section II includes all the following EXCEPT:</h3><ul>
+<li class="ok">Use of a boat in a racing competition.</li>
+<li>Coverage for liability exposure on scheduled boats.</li>
+<li>Property damage for the boat itself is not covered.</li></ul></div>
+
+<div class="card"><div class="num">Q158</div><h3>Under HO property additional coverages, what is covered for debris removal expense?</h3><ul>
+<li>All cost to remove debris after a covered loss, unless excluded in the policy.</li>
+<li>All costs, after the 10% share cost fee, to remove debris after a covered loss.</li>
+<li class="ok">Reasonable cost to remove debris after a covered loss.</li>
+<li>80% cost to remove debris after a covered loss.</li></ul></div>
+
+<div class="card"><div class="num">Q159</div><h3>Which HO form(s) provide open peril coverage for personal property?</h3><ul>
+<li>Requires endorsement</li>
+<li>Both HO-3 and HO-5</li>
+<li class="ok">HO-5</li>
+<li>HO-3</li></ul></div>
+
+<div class="card"><div class="num">Q160</div><h3>What is the difference between an HO 3 and an HO 3 with an HO 15 endorsement?</h3><ul>
+<li class="ok">An HO 3 is a policy that covers all risks, except those excluded, on the dwelling, and personal property is covered with broad form perils, whereas an HO 3 with an HO 15 endorsement covers all property on all risk basis.</li>
+<li>An HO 3 covers the building under renter's insurance, while an HO 3 with an HO 15 endorsement covers the building and all the property inside the building under renter's insurance.</li>
+<li>An HO 3 covers only broad form perils on a broad form, whereas the HO 3 with an HO 15 endorsement covers all perils.</li>
+<li>An HO 3 is a policy that covers all risks, except those excluded, on both dwelling and personal property, whereas an HO 3 with an HO 15 endorsement is a policy that covers all risks on the dwelling.</li></ul></div>
+
+<div class="card"><div class="num">Q161</div><h3>Under HO property coverage, earth movement is a general exclusion. Which homeowners' policy has done away with the exclusion for concurrent causation regarding this peril?</h3><ul>
+<li>HO 6</li>
+<li class="ok">HO 3</li>
+<li>HO 4</li>
+<li>HO 2</li></ul></div>
+
+<div class="card"><div class="num">Q162</div><h3>Coverage C (contents) perils are broad form on all HO policies except:</h3><ul>
+<li>HO-4 &amp; HO-6</li>
+<li>HO-3 &amp; HO-5</li>
+<li>HO-8</li>
+<li class="ok">HO-8 &amp; HO-5</li></ul></div>
+
+<div class="card"><div class="num">Q163</div><h3>Which HO endorsement covers loss due to personal injury (false arrest, libel, slander, defamation of character, and invasion of privacy)?</h3><ul>
+<li>Guaranteed and Extended Replacement Cost Options</li>
+<li class="ok">Personal Injury endorsement</li>
+<li>Personal Property - Replacement Cost endorsement</li>
+<li>Scheduled Personal Property endorsement</li></ul></div>
+
+<div class="card"><div class="num">Q164</div><h3>All of the following are considered an "insured" under Section 1 of the HO 3 EXCEPT:</h3><ul>
+<li>Family members who live with the insured.</li>
+<li>Named insured and his or her spouse.</li>
+<li class="ok">Relatives who share the same last name as the insured.</li>
+<li>Guests and employees of the house (optional upon request).</li></ul></div>
+
+<div class="card"><div class="num">Q165</div><h3>Coverage not provided without endorsement on a DP-1/Basic is:</h3><ul>
+<li class="ok">Coverage E</li>
+<li>Both Coverage D and E</li>
+<li>Coverage C</li>
+<li>Coverage D</li></ul></div>
+
+<div class="card"><div class="num">Q166</div><h3>Which is excluded under Section I and covered under Section II?</h3><ul>
+<li class="ok">Animals, birds, or fish</li>
+<li>Ride on lawn mower</li>
+<li>Hobby aircraft</li>
+<li>Firearms</li></ul></div>
+
+<div class="card"><div class="num">Q167</div><h3>Homeowner form(s) that do not provide any dwelling coverage (Coverage A)?</h3><ul>
+<li>HO-2</li>
+<li>Both HO-4 and HO-6</li>
+<li class="ok">HO-4 only</li>
+<li>HO-6 only</li></ul></div>
+
+<div class="card"><div class="num">Q168</div><h3>The HO form that does not provide coverage for real property is:</h3><ul>
+<li>HO-6</li>
+<li>All HO cover real property</li>
+<li>HO-8</li>
+<li class="ok">HO-4</li></ul></div>
+
+<div class="card"><div class="num">Q169</div><h3>Under Section 1 Condition - Loss Settlement, which of the following formulas is used to determine payment to an insured in the event of a loss?</h3><ul>
+<li>Insurance carried, divided by the loss, times the insurance required, equals the loss payment.</li>
+<li>Insurance required, divided by the loss, times the insurance carried, minus the deductible, equals the loss payment.</li>
+<li>Insurance required, divided by the insurance carried, times the loss, minus the deductible, equals the loss payment.</li>
+<li class="ok">Insurance carried, divided by the insurance required, times the loss, minus the deductible, equals the loss payment.</li></ul></div>
+
+<div class="card"><div class="num">Q170</div><h3>The following properties are included as an insured location and/or residence premises for Liability and Medical except:</h3><ul>
+<li class="ok">Insured's relative cemetery plot</li>
+<li>Vacant Land</li>
+<li>Borrowed beach home</li>
+<li>Apartment</li></ul></div>
+
+<div class="card"><div class="num">Q171</div><h3>Which of the residential policies are basic perils?</h3><ul>
+<li>DP-2 and HO-2</li>
+<li>All the DP policies</li>
+<li class="ok">DP-1 and HO-8</li>
+<li>DP-1, HO-8 and HO-2</li></ul></div>
+
+<div class="card"><div class="num">Q172</div><h3>Volcanic eruption excludes:</h3><ul>
+<li>dust and ash</li>
+<li>lava</li>
+<li>airborne shockwaves</li>
+<li class="ok">none are excluded</li></ul></div>
+
+<div class="card"><div class="num">Q173</div><h3>Liability and Medical Payments are the two major coverages provided in:</h3><ul>
+<li>Section I of the Commercial form</li>
+<li>Section II of the Commercial form</li>
+<li class="ok">Section II of the Homeowners form</li>
+<li>Section I of the Homeowners form</li></ul></div>
+
+<div class="card"><div class="num">Q174</div><h3>According to the ordinance or law exclusion, which of the following does NOT apply?</h3><ul>
+<li>This exclusion also applies to the California requirement to provide restroom facilities compliant with the American Disability Act (ADA).</li>
+<li class="ok">This coverage is required by state law.</li>
+<li>The coverage applies to upgrades to a property due to building code changes by the city.</li>
+<li>This coverage can be added by endorsement.</li></ul></div>
+
+<div class="card"><div class="num">Q175</div><h3>Which of the following homeowners policies covers condominium units?</h3><ul>
+<li>HO 8</li>
+<li class="ok">HO 6</li>
+<li>HO 2</li>
+<li>HO 4</li></ul></div>
+
+<div class="card"><div class="num">Q176</div><h3>What is the difference between an HO 2 and an HO 3?</h3><ul>
+<li class="ok">An HO 2 has dwelling and personal property coverage on a broad peril form, while an HO 3 has dwelling coverage on a special form and personal property on a broad peril form.</li>
+<li>Both an HO 2 and an HO 3 have dwelling and personal property on a broad peril form.</li>
+<li>An HO 2 has dwelling coverage on a special form and personal property on a broad form, while an HO 3 has coverage for both dwelling and personal property on a broad form.</li>
+<li>An HO 2 has both dwelling and personal property on a special peril form, while an HO 3 has dwelling and personal property on a broad form.</li></ul></div>
+
+<div class="card"><div class="num">Q177</div><h3>Which of the following is true regarding vehicles covered and not covered under Section II?</h3><ul>
+<li>All the insured's vehicles are excluded, except trailers being towed by the vehicles.</li>
+<li>All the insured's vehicles are covered.</li>
+<li class="ok">All the insured's vehicles and trailers towed by the insured are excluded from coverage.</li>
+<li>All the insured's vehicles are excluded, except the primary vehicles listed on the policy.</li></ul></div>
+
+<div class="card"><div class="num">Q178</div><h3>Jewelry valued at $30,000 is destroyed in a hotel fire in Paris, the HO would:</h3><ul>
+<li>limit the loss to $1500</li>
+<li>exclude the loss</li>
+<li class="ok">cover up to Coverage C limit</li>
+<li>all are incorrect</li></ul></div>
+
+<div class="card"><div class="num">Q179</div><h3>Coverage D, loss of use, depends on which of the following for a limit of insurance to be applied?</h3><ul>
+<li>Where the dwelling is located.</li>
+<li>How long the dwelling has been occupied.</li>
+<li>Who is occupying the dwelling</li>
+<li class="ok">How much coverage is placed on the dwelling?</li></ul></div>
+
+<div class="card"><div class="num">Q180</div><h3>Which of the following homeowners policies have both dwelling and personal property on a broad peril form?</h3><ul>
+<li>HO 2, HO 4, HO 5</li>
+<li>HO 4, HO 5, HO 6</li>
+<li class="ok">HO 2 and HO 6</li>
+<li>HO 2, HO 5, HO 8</li></ul></div>
+
+<div class="card"><div class="num">Q181</div><h3>Which of the following is NOT an option of the California Residential Property Insurance Disclosure Statement?</h3><ul>
+<li>Extended Replacement Cost Coverage</li>
+<li>Guaranteed Replacement Coverage</li>
+<li class="ok">Fair Market Value Cost Coverage</li>
+<li>Actual Cash Value</li></ul></div>
+
+<div class="card"><div class="num">Q182</div><h3>Which is not an "other coverage" in the dwelling forms?</h3><ul>
+<li class="ok">Volcanic eruption</li>
+<li>Collapse</li>
+<li>Tenant improvements</li>
+<li>Breakage of glass</li></ul></div>
+
+<div class="card"><div class="num">Q183</div><h3>In property coverage, what is specifically covered under coverage B?</h3><ul>
+<li>personal property commonly found in homes owned by the insured or other family members living with the insured.</li>
+<li>the dwelling unit and all personal property located inside the premises.</li>
+<li>all attached structures and outdoor personal property or equipment used to maintain or service the premises.</li>
+<li class="ok">other structures/ separate structures at the same location, such as garages, sheds and birdhouses on the described location that are separated from the dwelling by a clear space or connected only by a fence</li></ul></div>
+
+<div class="card"><div class="num">Q184</div><h3>Under Section 1 Condition - Loss Settlement on an HO3, which of the following situations shows the insured is covered adequately in the event of a loss?</h3><ul>
+<li>The insured has $170,000 coverage on property worth $300,000.</li>
+<li class="ok">The insured has $800,000 coverage on property with replacement cost of $1,000,000.</li>
+<li>The insured has $700,000 coverage on property with a replacement cost of $1,000,000.</li>
+<li>The insured has $400,000 coverage with replacement cost of $900,000.</li></ul></div>
+
+<div class="card"><div class="num">Q185</div><h3>Which of the following is NOT a difference between the Dwelling policy and Homeowners policy?</h3><ul>
+<li>In Dwelling forms, personal property coverage is optional, whereas in Homeowners it is included.</li>
+<li>In Dwelling forms, only 10% of the Coverage C limit is available for personal property away from the residence premises, whereas in Homeowners it is covered worldwide.</li>
+<li class="ok">In Dwelling forms, theft is a broad form peril, whereas in Homeowners it is not.</li>
+<li>In Dwelling forms, the liability coverage is available only by endorsement, whereas in Homeowners it is always included.</li></ul></div>
+
+<div class="card"><div class="num">Q186</div><h3>Which of the following would NOT be covered under Section II of Medical Payment to Others?</h3><ul>
+<li>Someone who trips over a water hose on the insured's property.</li>
+<li class="ok">The insured's pets that are injured on the insured's property.</li>
+<li>The insured's family member not living on the property with the insured and not a named insured.</li>
+<li>A person injured on the insured's property who was granted permission to be there by the insured.</li></ul></div>
+
+<div class="card"><div class="num">Q187</div><h3>Under HO property additional coverages, what is covered for removal?</h3><ul>
+<li>Debris removed after a covered loss to property.</li>
+<li class="ok">Property removed from the insured's premises to protect it from further damage due to a covered loss.</li>
+<li>Earth removal after total loss of a dwelling due to an earthquake or landslide.</li>
+<li>Any and all removal from loss due to a covered peril.</li></ul></div>
+
+<div class="card"><div class="num">Q188</div><h3>According to Section II of the Homeowners policy (selected homeowners endorsements), which of the following is true of the mobile home endorsement?</h3><ul>
+<li class="ok">The mobile home is considered the dwelling being insured when it is endorsed on the policy.</li>
+<li>The mobile home is a moveable structure and therefore cannot be covered as a dwelling.</li>
+<li>The mobile home is covered under the separate structure endorsement.</li>
+<li>The mobile home is a moveable structure and is covered under the commercial policy.</li></ul></div>
+
+<div class="card"><div class="num">Q189</div><h3>Under property coverage, which of the following is covered under coverage A?</h3><ul>
+<li class="ok">Dwelling</li>
+<li>Garage</li>
+<li>Other structures</li>
+<li>Personal property</li></ul></div>
+
+<div class="card"><div class="num">Q190</div><h3>All of the following are major differences between the broad form and the special form EXCEPT:</h3><ul>
+<li>Theft of property that is a part of the dwelling or other structure is covered in the special form.</li>
+<li class="ok">The broad form doesn't require the 80% coinsurance and the special form does.</li>
+<li>There is no exclusion for antennas, outdoor equipment, fences, or awnings from the peril of falling objects in the special form.</li>
+<li>Coverage for accidental discharge or overflow of water or steam that occurs off the insured premises is covered on the special form.</li></ul></div>
+
+<div class="card"><div class="num">Q191</div><h3>Difference between DP-2 Broad form and the DP-3 Special form is:</h3><ul>
+<li class="ok">plumbing water damage</li>
+<li>windstorm</li>
+<li>friendly fire</li>
+<li>Collapse</li></ul></div>
+
+<div class="card"><div class="num">Q192</div><h3>Under Section II - Additional Coverages, which of the following is NOT included?</h3><ul>
+<li>Loss Assessment Coverage</li>
+<li class="ok">Medical Payments to Others</li>
+<li>Damage to the Property of Others</li>
+<li>First Aid to Others</li></ul></div>
+
+<div class="card"><div class="num">Q193</div><h3>Which of the following is NOT a reason a home would be insured under a Dwelling policy rather than a Homeowners policy?</h3><ul>
+<li>The dwelling is a rental property.</li>
+<li class="ok">The dwelling has only one unit.</li>
+<li>The insured doesn't want theft or liability coverage.</li>
+<li>The dwelling is a seasonal dwelling and not used all the time.</li></ul></div>
+
+<div class="card"><div class="num">Q194</div><h3>All of the following are true of a broad coverage form EXCEPT:</h3><ul>
+<li>Coverage must equal at least 80% of the dwelling replacement cost.</li>
+<li>Seven extra perils are insured in a broad form.</li>
+<li class="ok">No minimum amount of insurance is required for the basic form.</li>
+<li>The broad coverage form covers more perils than a basic coverage form.</li></ul></div>
+
+<div class="card"><div class="num">Q195</div><h3>Which is not an exclusion under Coverage A on an HO-3?</h3><ul>
+<li>Damage by insured's dog</li>
+<li class="ok">Damage by a deer</li>
+<li>Damage by insects</li>
+<li>Damage by vermin</li></ul></div>
+
+<div class="card"><div class="num">Q196</div><h3>All of the following are general exclusions to the HO 3 policy except:</h3><ul>
+<li>Flood</li>
+<li>Building Ordinance</li>
+<li class="ok">Loss Assessment</li>
+<li>Earth Movement</li></ul></div>
+
+<div class="card"><div class="num">Q197</div><h3>The correct statement regarding landlord furnishings would be:</h3><ul>
+<li class="ok">Covered up to $2500 and excludes the peril of theft</li>
+<li>covered up to $2500</li>
+<li>not covered in HO forms</li>
+<li>excludes the peril of theft</li></ul></div>
+
+<div class="card"><div class="num">Q198</div><h3>In the event of a loss, the insured has the responsibility to do all of the following EXCEPT:</h3><ul>
+<li>Report the loss as soon as possible.</li>
+<li class="ok">Provide a copy of the police report to the insurer.</li>
+<li>Protect the property from further damage.</li>
+<li>Notify the police if the loss is the result of theft.</li></ul></div>
+
+<div class="card"><div class="num">Q199</div><h3>Which of the following properties are NOT included in insured locations and residence premises under Section II of the Homeowner's policy?</h3><ul>
+<li>Land on which a residence is being constructed</li>
+<li class="ok">Insured's work office space</li>
+<li>Insured's cemetery plot</li>
+<li>Vacant land</li></ul></div>
+
 </main>
 
 <script>
@@ -1164,6 +1462,38 @@
 
   input.addEventListener('input', run);
   clearBtn.addEventListener('click', function(){ input.value=''; run(); input.focus(); });
+
+  // --- voice search ---
+  var micBtn = document.getElementById('mic');
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR){
+    micBtn.style.display = 'none'; // browser doesn't support it; keyboard mic still works
+  } else {
+    var rec = null, listening = false;
+    micBtn.addEventListener('click', function(){
+      if (listening){ rec.stop(); return; }
+      rec = new SR();
+      rec.lang = 'en-US';
+      rec.interimResults = true;
+      rec.continuous = false;
+      listening = true;
+      micBtn.classList.add('listening');
+      input.placeholder = 'Listening…';
+      rec.onresult = function(e){
+        var text = '';
+        for (var i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
+        input.value = text;
+        run();
+      };
+      rec.onend = function(){
+        listening = false;
+        micBtn.classList.remove('listening');
+        input.placeholder = 'Search questions & answers… (or use Ctrl/Cmd+F)';
+      };
+      rec.onerror = rec.onend;
+      rec.start();
+    });
+  }
 })();
 </script>
 </body>
